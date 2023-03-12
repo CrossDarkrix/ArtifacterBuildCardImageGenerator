@@ -1,24 +1,21 @@
-#!/usr/bin/env python3
-# -*- coding:utf-8 -*-
-
-"""
-Author: FuroBath
-code rewriter: @kaz_m_gaming, CrossDarkrix
-"""
-
 import base64
 import codecs
+import json
 import itertools
 import os
+import requests
+import sqlite3
 from collections import Counter
 from decimal import Decimal, ROUND_HALF_UP
 from io import BytesIO
-import requests
 from PIL import Image, ImageFont, ImageDraw, ImageEnhance
 from PIL import ImageFile
-import json
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
+Database1 = sqlite3.connect(os.path.join(os.getcwd(), 'ArtifacterImageDB1.db'))
+Database2 = sqlite3.connect(os.path.join(os.getcwd(), 'ArtifacterImageDB2.db'))
+Cur1 = Database1.cursor()
+Cur2 = Database2.cursor()
 
 def duplicateJson():
     return """{
@@ -6657,30 +6654,28 @@ def generation(data):
 
 
     cwd = os.path.abspath(os.path.dirname(__file__))
-    config_font = lambda size : ImageFont.truetype('Assets/ja-jp.ttf',size)
-
-    Base = Image.open(f'./Base/{element}.png')
-
+    config_font = lambda size : ImageFont.truetype(BytesIO(Cur1.execute("SELECT * FROM Assets WHERE id='ja-jp.ttf'").fetchone()[1]), size)
+    Base = Image.open(BytesIO(Cur1.execute("SELECT * FROM Base WHERE id='{}.png'".format(element)).fetchone()[1]))
 
     #キャラクター
     CharacterCostume = CharacterData.get('Costume')
     if CharacterName in ['蛍','空']:
-        CharacterImage = Image.open(os.path.join(os.getcwd(), 'character', '{}({})'.format(CharacterName, element), 'avatar.png')).convert('RGBA')
+        CharacterImage = Image.open(BytesIO(Cur2.execute("SELECT * FROM {}_{} WHERE id='avatar.png'".format(CharacterName, element)).fetchone()[1])).convert('RGBA')
     else:
         if CharacterCostume:
-            CharacterImage = Image.open(os.path.join(os.getcwd(), 'character', '{}'.format(CharacterName), '{}.png'.format(CharacterCostume))).convert('RGBA')
+            CharacterImage = Image.open(BytesIO(Cur2.execute("SELECT * FROM {} WHERE id='{}.png'".format(CharacterName, CharacterCostume)).fetchone()[1])).convert('RGBA')
         else:
-            CharacterImage = Image.open(os.path.join(os.getcwd(), 'character', '{}'.format(CharacterName), 'avatar.png')).convert('RGBA')
-    Shadow = Image.open(os.path.join(os.getcwd(), 'Assets', 'shadow.png')).resize(Base.size)
+            CharacterImage = Image.open(BytesIO(Cur2.execute("SELECT * FROM {} WHERE id='avatar.png'".format(CharacterName)).fetchone()[1])).convert('RGBA')
+    Shadow = Image.open(BytesIO(Cur1.execute("SELECT * FROM Assets WHERE id='Shadow.png'").fetchone()[1])).resize(Base.size)
     CharacterImage = CharacterImage.crop((289, 0, 1728, 1024))
     CharacterImage = CharacterImage.resize((int(CharacterImage.width*0.75), int(CharacterImage.height*0.75)))
 
     CharacterAvatarMask = CharacterImage.copy()
 
     if CharacterName == 'アルハイゼン':
-        CharacterAvatarMask2 = Image.open(os.path.join(os.getcwd(), 'Assets', 'Alhaitham.png')).convert('L').resize(CharacterImage.size)
+        CharacterAvatarMask2 = Image.open(BytesIO(Cur1.execute("SELECT * FROM Assets WHERE id='Alhaitham.png'").fetchone()[1])).convert('L').resize(CharacterImage.size)
     else:
-        CharacterAvatarMask2 = Image.open(os.path.join(os.getcwd(), 'Assets', 'CharacterMask.png')).convert('L').resize(CharacterImage.size)
+        CharacterAvatarMask2 = Image.open(BytesIO(Cur1.execute("SELECT * FROM Assets WHERE id='CharacterMask.png'").fetchone()[1])).convert('L').resize(CharacterImage.size)
     CharacterImage.putalpha(CharacterAvatarMask2)
 
     CharacterPaste = Image.new('RGBA', Base.size, (255, 255, 255, 0))
@@ -6688,42 +6683,42 @@ def generation(data):
     CharacterPaste.paste(CharacterImage, (-160, -45), mask=CharacterAvatarMask)
     Base = Image.alpha_composite(Base, CharacterPaste)
     Base = Image.alpha_composite(Base, Shadow)
-    Weapon = Image.open(os.path.join(os.getcwd(), 'weapon', '{}.png'.format(WeaponName))).convert('RGBA').resize((128, 128))
+    Weapon = Image.open(BytesIO(Cur1.execute("SELECT * FROM weapon WHERE id='{}.png'".format(WeaponName)).fetchone()[1])).convert('RGBA').resize((128, 128))
     WeaponPaste = Image.new('RGBA', Base.size, (255, 255, 255, 0))
 
     WeaponMask = Weapon.copy()
     WeaponPaste.paste(Weapon, (1430, 50), mask=WeaponMask)
 
     Base = Image.alpha_composite(Base, WeaponPaste)
-    WeaponRImage = Image.open(os.path.join(os.getcwd(), 'Assets', 'Rarelity', '{}.png'.format(WeaponRarelity))).convert('RGBA')
+    WeaponRImage = Image.open(BytesIO(Cur1.execute("SELECT * FROM Rarelity WHERE id='{}.png'".format(WeaponRarelity)).fetchone()[1])).convert('RGBA')
     WeaponRImage = WeaponRImage.resize((int(WeaponRImage.width * 0.97), int(WeaponRImage.height*0.97)))
     WeaponRPaste = Image.new('RGBA', Base.size, (255, 255, 255, 0))
     WeaponRMask = WeaponRImage.copy()
 
     WeaponRPaste.paste(WeaponRImage, (1422, 173), mask=WeaponRMask)
     Base = Image.alpha_composite(Base, WeaponRPaste)
-    TalentBase = Image.open(os.path.join(os.getcwd(), 'Assets', 'TalentBack.png'))
+    TalentBase = Image.open(BytesIO(Cur1.execute("SELECT * FROM Assets WHERE id='TalentBack.png'").fetchone()[1]))
     TalentBasePaste = Image.new('RGBA', Base.size, (255, 255, 255, 0))
     TalentBase = TalentBase.resize((int(TalentBase.width / 1.5), int(TalentBase.height / 1.5)))
 
     for i, t in enumerate(['通常', 'スキル', "爆発"]):
         TalentPaste = Image.new('RGBA', TalentBase.size, (255, 255, 255, 0))
-        Talent = Image.open(os.path.join(os.getcwd(), 'character', '{}'.format(CharacterName), '{}.png'.format(t))).resize((50, 50)).convert('RGBA')
+        Talent = Image.open(BytesIO(Cur2.execute("SELECT * FROM {} WHERE id='{}.png'".format(CharacterName, t)).fetchone()[1])).resize((50, 50)).convert('RGBA')
         TalentMask = Talent.copy()
         TalentPaste.paste(Talent, (TalentPaste.width // 2 - 25, TalentPaste.height // 2 - 25), mask=TalentMask)
 
         TalentObject = Image.alpha_composite(TalentBase, TalentPaste)
         TalentBasePaste.paste(TalentObject, (15, 330 + i * 105))
     Base = Image.alpha_composite(Base, TalentBasePaste)
-    CBase = Image.open(os.path.join(os.getcwd(), '命の星座', '{}.png'.format(element))).resize((90, 90)).convert('RGBA')
-    Clock = Image.open(os.path.join(os.getcwd(), '命の星座', '{}LOCK.png'.format(element))).convert('RGBA')
+    CBase = Image.open(BytesIO(Cur2.execute("SELECT * FROM Constellation WHERE id='{}.png'".format(element)).fetchone()[1])).resize((90, 90)).convert('RGBA')
+    Clock = Image.open(BytesIO(Cur2.execute("SELECT * FROM Constellation WHERE id='{}LOCK.png'".format(element)).fetchone()[1])).convert('RGBA')
     ClockMask = Clock.copy()
     CPaste = Image.new('RGBA', Base.size, (255, 255, 255, 0))
     for c in range(1, 7):
         if c > CharacterConstellations:
             CPaste.paste(Clock, (666, -10 + c * 93), mask=ClockMask)
         else:
-            CharaC = Image.open(os.path.join(os.getcwd(), 'character', '{}'.format(CharacterName), '{}.png'.format(c))).convert('RGBA').resize((45, 45))
+            CharaC = Image.open(BytesIO(Cur2.execute("SELECT * FROM {} WHERE id='{}.png'".format(CharacterName, c)).fetchone()[1])).convert('RGBA').resize((45, 45))
             CharaCPaste = Image.new('RGBA', CBase.size, (255, 255, 255, 0))
             CharaCMask = CharaC.copy()
             CharaCPaste.paste(CharaC, (int(CharaCPaste.width / 2) - 25, int(CharaCPaste.height / 2) - 23), mask=CharaCMask)
@@ -6737,7 +6732,7 @@ def generation(data):
     friendshiplength = D.textlength(str(FriendShip), font=config_font(25))
     D.text((35, 75), 'Lv.{}'.format(CharacterLevel), font=config_font(25))
     D.rounded_rectangle((35 + levellength + 5, 74, 77 + levellength + friendshiplength, 102), radius=2, fill="black")
-    FriendShipIcon = Image.open(os.path.join(os.getcwd(), 'Assets', 'Love.png')).convert('RGBA')
+    FriendShipIcon = Image.open(BytesIO(Cur1.execute("SELECT * FROM Assets WHERE id='Love.png'").fetchone()[1])).convert('RGBA')
     FriendShipIcon = FriendShipIcon.resize((int(FriendShipIcon.width * (24 / FriendShipIcon.height)), 24))
     Fmask = FriendShipIcon.copy()
     Base.paste(FriendShipIcon, (42 + int(levellength), 76), mask=Fmask)
@@ -6762,7 +6757,7 @@ def generation(data):
         except:
             i = 7
             D.text((844, 67 + i * 70), k, font=config_font(26))
-            opicon = Image.open(os.path.join(os.getcwd(), 'emotes', '{}.png'.format(k))).resize((40, 40))
+            opicon = Image.open(BytesIO(Cur1.execute("SELECT * FROM emotes WHERE id='{}.png'".format(k)).fetchone()[1])).resize((40, 40))
             oppaste = Image.new('RGBA', Base.size, (255, 255, 255, 0))
             oppaste.paste(opicon, (789, 65 + i * 70))
             Base = Image.alpha_composite(Base, oppaste)
@@ -6784,7 +6779,7 @@ def generation(data):
     wlebellen = D.textlength(f'Lv.{WeaponLevel}', font=config_font(24))
     D.rounded_rectangle((1582, 80, 1582 + wlebellen + 4, 108), radius=1, fill='black')
     D.text((1584, 82), f'Lv.{WeaponLevel}', font=config_font(24))
-    BaseAtk = Image.open(os.path.join(os.getcwd(), 'emotes', '基礎攻撃力.png')).resize((23, 23))
+    BaseAtk = Image.open(BytesIO(Cur1.execute("SELECT * FROM emotes WHERE id='基礎攻撃力.png'").fetchone()[1])).resize((23, 23))
     BaseAtkmask = BaseAtk.copy()
     Base.paste(BaseAtk, (1600, 120), mask=BaseAtkmask)
     D.text((1623, 120), '基礎攻撃力  {}'.format(WeaponBaseATK), font=config_font(23))
@@ -6796,7 +6791,7 @@ def generation(data):
         "HPパーセンテージ": "HP%",
     }
     if WeaponSubOPKey != None:
-        BaseAtk = Image.open(os.path.join(os.getcwd(), 'emotes', '{}.png'.format(WeaponSubOPKey))).resize((23, 23))
+        BaseAtk = Image.open(BytesIO(Cur1.execute("SELECT * FROM emotes WHERE id='{}.png'".format(WeaponSubOPKey)).fetchone()[1])).resize((23, 23))
         BaseAtkmask = BaseAtk.copy()
         Base.paste(BaseAtk, (1600, 155), mask=BaseAtkmask)
         D.text((1623, 155), f'{optionmap.get(WeaponSubOPKey) or WeaponSubOPKey}  {str(WeaponSubOPValue)+"%" if WeaponSubOPKey in disper else format(WeaponSubOPValue,",")}', font=config_font(23))
@@ -6809,13 +6804,13 @@ def generation(data):
     D.text((1867 - blen, 585), '{}換算'.format(ScoreCVBasis), font=config_font(24))
 
     if ScoreTotal >= 220:
-        ScoreEv = Image.open(os.path.join(os.getcwd(), 'artifactGrades', 'SS.png'))
+        ScoreEv = Image.open(BytesIO(Cur1.execute("SELECT * FROM artifactGrades WHERE id='SS.png'").fetchone()[1]))
     elif ScoreTotal >= 200:
-        ScoreEv = Image.open(os.path.join(os.getcwd(), 'artifactGrades', 'S.png'))
+        ScoreEv = Image.open(BytesIO(Cur1.execute("SELECT * FROM artifactGrades WHERE id='S.png'").fetchone()[1]))
     elif ScoreTotal >= 180:
-        ScoreEv = Image.open(os.path.join(os.getcwd(), 'artifactGrades', 'A.png'))
+        ScoreEv = Image.open(BytesIO(Cur1.execute("SELECT * FROM artifactGrades WHERE id='A.png'").fetchone()[1]))
     else:
-        ScoreEv = Image.open(os.path.join(os.getcwd(), 'artifactGrades', 'B.png'))
+        ScoreEv = Image.open(BytesIO(Cur1.execute("SELECT * FROM artifactGrades WHERE id='B.png'").fetchone()[1]))
 
     ScoreEv = ScoreEv.resize((ScoreEv.width // 8, ScoreEv.height // 8))
     EvMask = ScoreEv.copy()
@@ -6824,19 +6819,19 @@ def generation(data):
 
     #聖遺物
     atftype = list()
-    for i,parts in enumerate(['flower', "wing", "clock", "cup", "crown"]):
+    for i, parts in enumerate(['flower', "wing", "clock", "cup", "crown"]):
         details = ArtifactsData.get(parts)
 
         if not details:
             continue
         atftype.append(details['type'])
         PreviewPaste = Image.new('RGBA', Base.size, (255, 255, 255, 0))
-        Preview = Image.open(os.path.join(os.getcwd(), 'Artifact', '{}'.format(details["type"]), '{}.png'.format(parts))).resize((256, 256))
+        Preview = Image.open(BytesIO(Cur1.execute("SELECT * FROM {} WHERE id='{}.png'".format(details["type"], parts)).fetchone()[1])).resize((256, 256))
         enhancer = ImageEnhance.Brightness(Preview)
         Preview = enhancer.enhance(0.6)
         Preview= Preview.resize((int(Preview.width*1.3), int(Preview.height*1.3)))
         Pmask1 = Preview.copy()
-        Pmask = Image.open(os.path.join(os.getcwd(), 'Assets', 'ArtifactMask.png')).convert('L').resize(Preview.size)
+        Pmask = Image.open(BytesIO(Cur1.execute("SELECT * FROM Assets WHERE id='ArtifactMask.png'").fetchone()[1])).convert('L').resize(Preview.size)
         Preview.putalpha(Pmask)
         if parts in ['flower', 'crown']:
             PreviewPaste.paste(Preview, (-37 + 373 * i, 570), mask=Pmask1)
@@ -6851,7 +6846,7 @@ def generation(data):
 
         mainoplen = D.textlength(optionmap.get(mainop) or mainop, font=config_font(29))
         D.text((375 + i * 373 - int(mainoplen), 655), optionmap.get(mainop) or mainop, font=config_font(29))
-        MainIcon = Image.open(os.path.join(os.getcwd(), 'emotes', '{}.png'.format(mainop))).convert('RGBA').resize((35, 35))
+        MainIcon = Image.open(BytesIO(Cur1.execute("SELECT * FROM emotes WHERE id='{}.png'".format(mainop)).fetchone()[1])).convert('RGBA').resize((35, 35))
         MainMask = MainIcon.copy()
         Base.paste(MainIcon, (340 + i * 373 - int(mainoplen), 655), mask=MainMask)
         mainv = details['main']['value']
@@ -6884,7 +6879,7 @@ def generation(data):
                 D.text((79 + 373 * i, 811 + 50 * a), optionmap.get(SubOP) or SubOP, font=config_font(25), fill=(255,255,255,190))
             else:
                 D.text((79 + 373 * i, 811 + 50 * a), optionmap.get(SubOP) or SubOP, font=config_font(25))
-            SubIcon = Image.open(os.path.join(os.getcwd(), 'emotes', '{}.png'.format(SubOP))).resize((30, 30))
+            SubIcon = Image.open(BytesIO(Cur1.execute("SELECT * FROM emotes WHERE id='{}.png'".format(SubOP)).fetchone()[1])).resize((30, 30))
             SubMask = SubIcon.copy()
             Base.paste(SubIcon, (44 + 373 * i, 811 + 50 * a), mask=SubMask)
             if SubOP in disper:
@@ -6940,13 +6935,13 @@ def generation(data):
         }
 
         if Score >= PointRefer[parts]['SS']:
-            ScoreImage = Image.open(os.path.join(os.getcwd(), 'artifactGrades', 'SS.png'))
+            ScoreImage = Image.open(BytesIO(Cur1.execute("SELECT * FROM artifactGrades WHERE id='SS.png'").fetchone()[1]))
         elif Score >= PointRefer[parts]['S']:
-            ScoreImage = Image.open(os.path.join(os.getcwd(), 'artifactGrades', 'S.png'))
+            ScoreImage = Image.open(BytesIO(Cur1.execute("SELECT * FROM artifactGrades WHERE id='S.png'").fetchone()[1]))
         elif Score >= PointRefer[parts]['A']:
-            ScoreImage = Image.open(os.path.join(os.getcwd(), 'artifactGrades', 'A.png'))
+            ScoreImage = Image.open(BytesIO(Cur1.execute("SELECT * FROM artifactGrades WHERE id='A.png'").fetchone()[1]))
         else:
-            ScoreImage = Image.open(os.path.join(os.getcwd(), 'artifactGrades', 'B.png'))
+            ScoreImage = Image.open(BytesIO(Cur1.execute("SELECT * FROM artifactGrades WHERE id='B.png'").fetchone()[1]))
 
         ScoreImage = ScoreImage.resize((ScoreImage.width // 11, ScoreImage.height // 11))
         SCMask = ScoreImage.copy()
@@ -6963,8 +6958,8 @@ def generation(data):
             D.text((1536, 263), n, fill=(0, 255, 0), font=config_font(23))
             D.rounded_rectangle((1818, 263, 1862, 288), 1, 'black')
             D.text((1831, 265), str(q), font=config_font(19))
-    os.makedirs(os.path.join(os.getcwd(), 'Image_Output'), exist_ok=True)
-    Base.save(os.path.join(os.getcwd(), 'Image_Output', 'output.png'))
+    os.makedirs(os.path.join(os.getcwd(), 'Output'), exist_ok=True)
+    Base.save(os.path.join(os.getcwd(), 'Output', 'output.png'))
 
     return pil_to_base64(Base,format='png')
 
@@ -9982,6 +9977,7 @@ def create_json(uid, avatarInfo, score_state):
             score[relicType[relicInfo['flat']['equipType']]] = Decimal(relicScore).quantize(Decimal('0.1'), rounding=ROUND_HALF_UP)
         relicTotalScore += Decimal(relicScore)
     score['total'] = relicTotalScore
+    os.makedirs('json', exist_ok=True)
     with open(os.path.join(os.getcwd(), 'json', 'data.json'), 'w', encoding='utf-8') as f:
         json.dump(model, f, indent=2, ensure_ascii=False, default=decimal_to_float)
     return model
@@ -10011,6 +10007,9 @@ def main():
             print('キャラクターの表示設定がOFFになっています。ゲーム内にて表示設定を確認してください。')
     else:
         print('プロフィールにキャラクターが登録されていません。ゲーム内にて表示設定を確認してください。')
+    Cur1.close()
+    Cur2.close()
+    os.remove(os.path.join(os.getcwd(), 'json', 'data.json'))
 
 if __name__ == '__main__':
     main()
