@@ -5,7 +5,7 @@
 ## 使い方
 
 ```
-python3 Generater.py
+python3 ArtifacterImageGenerator.py
 ```
 
 ## 作者さん
