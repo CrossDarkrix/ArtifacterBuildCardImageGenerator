@@ -10415,8 +10415,8 @@ def BuildCardCreater(data):
             D.text((1536, 263), n, fill=(0, 255, 0), font=config_font(23))
             D.rounded_rectangle((1818, 263, 1862, 288), 1, 'black')
             D.text((1831, 265), str(q), font=config_font(19))
-    os.makedirs(os.path.join(os.getcwd(), 'Image_Output'), exist_ok=True)
-    Base.save(os.path.join(os.getcwd(), 'Image_Output', 'output.png'))
+    os.makedirs(os.path.join(os.getcwd(), 'Output'), exist_ok=True)
+    Base.save(os.path.join(os.getcwd(), 'Output', 'output.png'))
 
     return pil_to_base64(Base,format='png')
 
