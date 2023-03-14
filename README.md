@@ -8,6 +8,12 @@
 python3 ArtifacterImageGenerator.py
 ```
 
+## GUI版の画像出力先
+
+Windowsなら「%USERPROFILE%\ArtifacterImageOutput」
+
+Linuxなら「$HOME/ArtifacterImageOutput」
+
 ## 作者さん
 
 [Hyugo様](https://twitter.com/hyugo_genshin)
