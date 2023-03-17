@@ -10163,7 +10163,10 @@ class Ui_ArtifacterImageGenerator(object):
         self.CheckGroups.addButton(self.Check_Ch)
         self.CheckGroups.addButton(self.Check_EM)
         self.CheckGroups.setExclusive(True)
-        self.UIDs.setText(concurrent.futures.ThreadPoolExecutor(os.cpu_count()*999999999).submit(self.AutoPickUID).result())
+        try:
+            self.UIDs.setText(concurrent.futures.ThreadPoolExecutor(os.cpu_count()*999999999).submit(self.AutoPickUID).result())
+        except:
+            pass
         if platform.system() == 'Windows':
             self.SavePath.setText(os.path.join(os.getenv('USERPROFILE'), 'ArtifacterImageOutput'))
         else:
