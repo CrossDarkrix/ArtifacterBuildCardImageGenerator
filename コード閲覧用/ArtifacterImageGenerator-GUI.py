@@ -3,6 +3,10 @@ import concurrent.futures
 import itertools
 import json
 import os
+import re
+import shutil
+import subprocess
+import tempfile
 import platform
 import sys
 import time
@@ -10159,6 +10163,7 @@ class Ui_ArtifacterImageGenerator(object):
         self.CheckGroups.addButton(self.Check_Ch)
         self.CheckGroups.addButton(self.Check_EM)
         self.CheckGroups.setExclusive(True)
+        self.UIDs.setText(concurrent.futures.ThreadPoolExecutor(os.cpu_count()*999999999).submit(self.AutoPickUID).result())
         if platform.system() == 'Windows':
             self.SavePath.setText(os.path.join(os.getenv('USERPROFILE'), 'ArtifacterImageOutput'))
         else:
@@ -10179,6 +10184,14 @@ class Ui_ArtifacterImageGenerator(object):
         self.Check_Ch.setText("元素チャージ効率")
         self.Check_EM.setText("元素熟知")
         self.Create.setText("作成")
+
+    def AutoPickUID(self):
+        gamedir = re.findall("(.+GenshinImpact_Data|YuanShen_Data)", open(os.path.join(os.getenv('USERPROFILE'), 'AppData', 'LocalLow', 'miHoYo', 'Genshin Impact', 'output_log.txt'), 'r').read())[0].split('Warmup file ')[-1].replace('/', os.sep) # Logファイルから場所を特定
+        tmpdir = tempfile.mkdtemp() # 一時フォルダを作成
+        subprocess.run("powershell -c Copy-Item '{}' -Destination '{}'".format(os.path.join(gamedir, 'webCaches', 'Cache', 'Cache_Data', 'data_2'), os.path.join(tmpdir, 'cache.txt')), shell=True) # powershellで強引にキャッシュファイルを引っこ抜く
+        uid = re.search('[0-9]{9}', list(set(re.findall('("uid":"[0-9]{9}")', str(open(os.path.join(tmpdir, 'cache.txt'), 'rb').read()))))[0])[0] # 一時フォルダで引っこ抜いたキャッシュデータからUIDを特定
+        shutil.rmtree(tmpdir) # 一時フォルダの削除
+        return uid
 
     def GetPlayerInfo(self, uid):
         PlayerJson = json.loads(urllib.request.urlopen(urllib.request.Request('https://enka.network/api/uid/{}?info'.format(uid), headers={'User-Agent': UsrAgn})).read())
