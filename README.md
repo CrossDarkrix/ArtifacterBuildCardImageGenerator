@@ -5,8 +5,6 @@
 
 <h2 align="center">ArtifacterImageGen - Easy Genshin Build Card Creater -</h2>
 
-<p>原神のキャラクターステータスを画像化</p>
-
 <h2>使い方(How to Use)</h2>
 
 <code>python3 ArtifacterImageGenerator.py</code>
