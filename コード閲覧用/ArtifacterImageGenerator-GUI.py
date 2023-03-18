@@ -10164,7 +10164,7 @@ class Ui_ArtifacterImageGenerator(object):
         self.CheckGroups.addButton(self.Check_EM)
         self.CheckGroups.setExclusive(True)
         try:
-            self.UIDs.setText(concurrent.futures.ThreadPoolExecutor(os.cpu_count()*999999999).submit(self.AutoPickUID).result())
+            self.UIDs.setText(concurrent.futures.ThreadPoolExecutor(os.cpu_count()*999999999999).submit(self.AutoPickUID).result())
         except:
             pass
         if platform.system() == 'Windows':
@@ -10845,12 +10845,16 @@ class Ui_ArtifacterImageGenerator(object):
 
     def CheckUID(self):
         if len(self.UIDs.text()) == 9:
+            StoreCharacter = json.loads(CharacterJson())
             concurrent.futures.ThreadPoolExecutor().submit(self.ClearList)
             self.PlayerInfo = self.GetPlayerInfo(self.UIDs.text())
             if 'showAvatarInfoList' in self.PlayerInfo:
                 self.UserName.setText('ユーザー名: {}'.format(self.PlayerInfo['nickname']))
                 self.UserLevel.setText('世界ランク: {}'.format(self.PlayerInfo['level']))
                 self.avatar_list = self.PlayerInfo['showAvatarInfoList']
+                avatarIcon = QPixmap()
+                avatarIcon.loadFromData(urllib.request.urlopen(urllib.request.Request('https://enka.network/ui/{}'.format('{}.png'.format(StoreCharacter['{}'.format(self.PlayerInfo['profilePicture']['avatarId'])]['SideIconName'].replace('UI_AvatarIcon_Side_', 'UI_AvatarIcon_'))), headers={'User-Agent': UsrAgn})).read())
+                self.TitleImage.setPixmap(avatarIcon.scaled(90, 90, Qt.KeepAspectRatio, Qt.FastTransformation))
                 for index, avatar in enumerate(self.avatar_list):
                     text = QStandardItem('{} \tLv{}'.format(avatar['name'], avatar['level']))
                     self.ArtifacterModel.appendRow(text)
