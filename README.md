@@ -1,6 +1,6 @@
 <div align="center">
-	<a href="https://github.com/CrossDarkrix/ArtifacterImageGen">
-	<img width="150px" height="150px" alt="ArtifacterImageGen" src="https://raw.githubusercontent.com/CrossDarkrix/ArtifacterImageGen/master/Images/ArtifacterIcon.png"></a>
+	<a href="https://github.com/CrossDarkrix/ArtifacterBuildCardImageGenerator">
+	<img width="150px" height="150px" alt="ArtifacterImageGen" src="https://raw.githubusercontent.com/CrossDarkrix/ArtifacterBuildCardImageGenerator/master/Images/ArtifacterIcon.png"></a>
 </div>
 
 <h2 align="center">ArtifacterImageGen - Easy Genshin Build Card Creater -</h2>
