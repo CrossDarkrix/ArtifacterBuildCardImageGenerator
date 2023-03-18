@@ -10621,10 +10621,13 @@ class Ui_ArtifacterImageGenerator(object):
         self._print('保存先を作成中...')
         os.makedirs(self.SavePath.text(), exist_ok=True)
         Base.save(os.path.join(self.SavePath.text(), 'output.png'))
+        BasePreviewBytes = BytesIO()
+        BasePreview = QPixmap()
+        Base.save(BasePreviewBytes, 'png')
+        BasePreview.loadFromData(BasePreviewBytes.getvalue())
+        self.Preview.setPixmap(BasePreview.scaled(400, 175, Qt.KeepAspectRatio, Qt.FastTransformation))
         self._print('完了!　出力先は「{}」です。'.format(self.SavePath.text()))
-        self.ArtifacterprogressBar.setValue(min(((self.ArtifacterprogressBar.value() + 3.125) / 100) * 100.0, 100.0))
-        for _ in range(2):
-            self.ArtifacterprogressBar.setValue(min(((self.ArtifacterprogressBar.value() + 3.125) / 100) * 100.0, 100.0))
+        self.ArtifacterprogressBar.setValue(min(((self.ArtifacterprogressBar.value() + 3.125 + 3.125 + 3.125) / 100) * 100.0, 100.0))
 
     def CharacterInfoExtractor(self, uid, avatarInfo, score_state):
         BaseJson = json.loads(FormatJson()) # ベースになるJSON
