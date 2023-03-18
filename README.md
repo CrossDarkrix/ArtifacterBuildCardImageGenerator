@@ -1,6 +1,6 @@
 <div align="center">
 	<a href="https://github.com/CrossDarkrix/ArtifacterImageGen">
-	<img width="200px" height="200px" alt="pyExtendTools" src="https://raw.githubusercontent.com/CrossDarkrix/ArtifacterImageGen/main/Images/ArtifacterIcon.png"></a>
+	<img width="200px" height="200px" alt="ArtifacterImageGen" src="https://raw.githubusercontent.com/CrossDarkrix/ArtifacterImageGen/master/Images/ArtifacterIcon.png"></a>
 </div>
 
 <h2 align="center">ArtifacterImageGen - Easy Genshin Build Card Creater -</h2>
@@ -9,9 +9,7 @@
 
 <h2>使い方(How to Use)</h2>
 
-<code>
-python3 ArtifacterImageGenerator.py
-</code>
+<code>python3 ArtifacterImageGenerator.py</code>
 
 <h3>GUI版の画像出力先</h3>
 <ul>
