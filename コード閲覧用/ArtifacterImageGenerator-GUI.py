@@ -10885,7 +10885,10 @@ class Ui_ArtifacterImageGenerator(object):
                 self.TitleImage.setPixmap(avatarIcon.scaled(90, 90, Qt.KeepAspectRatio, Qt.FastTransformation))
                 for index, avatar in enumerate(self.avatar_list):
                     if 3 <= len(avatar['name']):
-                        Name = '{} \t'.format(avatar['name'])
+                        if 'ー' == avatar['name'][-1]:
+                            Name = '{} \t\t'.format(avatar['name'])
+                        else:
+                            Name = '{} \t'.format(avatar['name'])
                     elif len(avatar['name']) == 1:
                         Name = '{} \t\t\t'.format(avatar['name'])
                     else:
