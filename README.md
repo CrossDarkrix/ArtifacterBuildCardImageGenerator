@@ -9,6 +9,8 @@
 
 <code>python3 ArtifacterImageGenerator.py</code>
 
+<h2>ScreenShot</h2>
+
 <a href="https://github.com/CrossDarkrix/ArtifacterBuildCardImageGenerator"><img src="https://raw.githubusercontent.com/CrossDarkrix/ArtifacterBuildCardImageGenerator/master/Images/Screenshots/image0.jpg" width="800px" height="700px"></a>
 
 <h3>GUI版の画像出力先</h3>
