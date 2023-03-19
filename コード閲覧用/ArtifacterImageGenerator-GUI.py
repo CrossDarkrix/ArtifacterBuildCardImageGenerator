@@ -27,6 +27,7 @@ from PySide6.QtWidgets import (QAbstractItemView, QApplication, QCheckBox, QLabe
                                QListView, QPushButton, QMainWindow, QLineEdit, QFrame, QDialog, QDialogButtonBox, QProgressBar, QButtonGroup, QGridLayout)
 
 UsrAgn = 'Mozilla/5.0 (Linux; U; Android 8.0; en-la; Nexus Build/JPG991) AppleWebKit/511.2 (KHTML, like Gecko) Version/5.0 Mobile/11S444 YJApp-ANDROID jp.co.yahoo.android.yjtop/4.01.1.5'
+ClickCount = ['0']
 
 class NoneInputUID(QDialog):
     def __init__(self, parent=None):
@@ -10241,30 +10242,31 @@ class Ui_ArtifacterImageGenerator(object):
         self.WINDOW.setWindowTitle("ArtifacterImageGenerator ({})".format(p))
 
     def CreateCard(self, c):
-        self.ArtifacterprogressBar.setValue(0)
-        if self.UIDs.text() == '':
-            NoneInputUID().RESULTs()
-        elif self.SavePath.text() == '':
-            NoneInputSavePath().RESULTs()
-        else:
-            try:
-                self.avatariD = self.avatar_list[int(self.Artifacterlist.selectedIndexes()[0].row())]['avatarId']
-                self.data = self.GetAvatarFullInfo(self.UIDs.text(), self.avatariD)
-                if self.Check_HP.checkState() == Qt.Checked:
-                    self.score_state = 'HP'
-                if self.Check_Attack.checkState() == Qt.Checked:
-                    self.score_state = '攻撃'
-                if self.Check_Def.checkState() == Qt.Checked:
-                    self.score_state = '防御'
-                if self.Check_Ch.checkState() == Qt.Checked:
-                    self.score_state = 'チャージ'
-                if self.Check_EM.checkState() == Qt.Checked:
-                    self.score_state = '元素熟知'
-                self._print('起動中...')
-                self.BuildCardCreater(json.loads(self.CharacterInfoExtractor(self.UIDs.text(), self.data, self.score_state)))
-                self.setPreview()
-            except IndexError:
-                NoneSelectedItem().RESULTs()
+        if not ClickCount[0] == '1':
+            self.ArtifacterprogressBar.setValue(0)
+            if self.UIDs.text() == '':
+                NoneInputUID().RESULTs()
+            elif self.SavePath.text() == '':
+                NoneInputSavePath().RESULTs()
+            else:
+                try:
+                    self.avatariD = self.avatar_list[int(self.Artifacterlist.selectedIndexes()[0].row())]['avatarId']
+                    self.data = self.GetAvatarFullInfo(self.UIDs.text(), self.avatariD)
+                    if self.Check_HP.checkState() == Qt.Checked:
+                        self.score_state = 'HP'
+                    if self.Check_Attack.checkState() == Qt.Checked:
+                        self.score_state = '攻撃'
+                    if self.Check_Def.checkState() == Qt.Checked:
+                        self.score_state = '防御'
+                    if self.Check_Ch.checkState() == Qt.Checked:
+                        self.score_state = 'チャージ'
+                    if self.Check_EM.checkState() == Qt.Checked:
+                        self.score_state = '元素熟知'
+                    self._print('起動中...')
+                    self.BuildCardCreater(json.loads(self.CharacterInfoExtractor(self.UIDs.text(), self.data, self.score_state)))
+                    self.setPreview()
+                except IndexError:
+                    NoneSelectedItem().RESULTs()
 
     def BuildCardCreater(self, data):
         element = data.get('元素')
@@ -10654,6 +10656,7 @@ class Ui_ArtifacterImageGenerator(object):
         BasePreview.loadFromData(BasePreviewBytes.getvalue())
         self.Preview.setPixmap(BasePreview.scaled(440, 300, Qt.KeepAspectRatio, Qt.FastTransformation))
         self._print('完了!　出力先は「{}」です。'.format(self.SavePath.text()))
+        ClickCount[0] = '0'
 
     def CharacterInfoExtractor(self, uid, avatarInfo, score_state):
         BaseJson = json.loads(FormatJson()) # ベースになるJSON
