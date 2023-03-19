@@ -11,9 +11,9 @@ import platform
 import sys
 import time
 import urllib.request
+from ImageBytes import ArtifactGrades, Artifactemotes, ArtifactBaseImages, ArtifactAssets, ArtifactConstellation, ArtifactRarelity
 from collections import Counter
 from decimal import Decimal, ROUND_HALF_UP
-from ImageBytes import *
 from io import BytesIO
 from PIL import Image, ImageFont, ImageDraw, ImageEnhance
 from PIL import ImageFile
@@ -10006,24 +10006,27 @@ class Ui_ArtifacterImageGenerator(object):
     def setupUi(self, ArtifacterImageGenerator):
         if not ArtifacterImageGenerator.objectName():
             ArtifacterImageGenerator.setObjectName("ArtifacterImageGenerator")
-        ArtifacterImageGenerator.resize(778, 679)
+        ArtifacterImageGenerator.resize(937, 780)
         font = QFont()
         font.setFamilies(["Arial"])
         ArtifacterImageGenerator.setFont(font)
         ArtifacterImageGenerator.setStyleSheet("QWidget{color: Red;background: #2e2e2d;}")
         self.TitleImage = QLabel(ArtifacterImageGenerator)
         self.TitleImage.setObjectName("TitleImage")
-        self.TitleImage.setGeometry(QRect(20, 10, 90, 90))
+        self.TitleImage.setGeometry(QRect(20, 20, 90, 90))
         self.TitleImage.setStyleSheet("QLabel{background: #1a1a1a;}")
         self.TitleImage.setAlignment(Qt.AlignCenter)
         self.TitleImage.setPixmap(QPixmap(QSize(80, 80)).fromImage(QImage.fromData(QByteArray.fromBase64(b'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'))))
         self.Artifacterlist = QListView(ArtifacterImageGenerator)
         self.Artifacterlist.setObjectName("Artifacterlist")
-        self.Artifacterlist.setGeometry(QRect(20, 170, 361, 171))
+        self.Artifacterlist.setGeometry(QRect(20, 240, 441, 211))
         font1 = QFont()
         font1.setFamilies(["Arial"])
         font1.setPointSize(16)
-        self.Artifacterlist.setFont(font1)
+        font4 = QFont()
+        font4.setFamilies(["Arial"])
+        font4.setPointSize(20)
+        self.Artifacterlist.setFont(font4)
         self.Artifacterlist.setStyleSheet(u"QListView{background: #1a1a1a; color: White;} QListView::item:selected{background: #4f4f4f;color: Red;}")
         self.Artifacterlist.setAutoScroll(False)
         self.Artifacterlist.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
@@ -10033,7 +10036,7 @@ class Ui_ArtifacterImageGenerator(object):
         self.CheckGroups = QButtonGroup(ArtifacterImageGenerator)
         self.Check_HP = QCheckBox(ArtifacterImageGenerator)
         self.Check_HP.setObjectName("Check_HP")
-        self.Check_HP.setGeometry(QRect(50, 450, 101, 41))
+        self.Check_HP.setGeometry(QRect(40, 550, 131, 41))
         font2 = QFont()
         font2.setFamilies(["Arial"])
         font2.setPointSize(13)
@@ -10041,130 +10044,145 @@ class Ui_ArtifacterImageGenerator(object):
         self.Check_HP.setStyleSheet("QCheckBox{background: #1a1a1a;}")
         self.Check_Attack = QCheckBox(ArtifacterImageGenerator)
         self.Check_Attack.setObjectName("Check_Attack")
-        self.Check_Attack.setGeometry(QRect(50, 500, 101, 41))
+        self.Check_Attack.setGeometry(QRect(40, 600, 131, 41))
         self.Check_Attack.setFont(font2)
         self.Check_Attack.setStyleSheet("QCheckBox{background: #1a1a1a;}")
         self.Check_Def = QCheckBox(ArtifacterImageGenerator)
         self.Check_Def.setObjectName("Check_Def")
-        self.Check_Def.setGeometry(QRect(50, 550, 101, 41))
+        self.Check_Def.setGeometry(QRect(40, 650, 131, 41))
         self.Check_Def.setFont(font2)
         self.Check_Def.setStyleSheet("QCheckBox{background: #1a1a1a;}")
         self.Check_Ch = QCheckBox(ArtifacterImageGenerator)
         self.Check_Ch.setObjectName("Check_Ch")
-        self.Check_Ch.setGeometry(QRect(160, 500, 171, 41))
+        self.Check_Ch.setGeometry(QRect(180, 550, 191, 41))
         self.Check_Ch.setFont(font2)
         self.Check_Ch.setStyleSheet("QCheckBox{background: #1a1a1a;}")
         self.Check_EM = QCheckBox(ArtifacterImageGenerator)
         self.Check_EM.setObjectName("Check_EM")
-        self.Check_EM.setGeometry(QRect(160, 550, 171, 41))
+        self.Check_EM.setGeometry(QRect(180, 600, 191, 41))
         self.Check_EM.setFont(font2)
         self.Check_EM.setStyleSheet("QCheckBox{background: #1a1a1a;}")
         self.Create = QPushButton(ArtifacterImageGenerator)
         self.Create.setObjectName("Create")
-        self.Create.setGeometry(QRect(470, 530, 181, 81))
+        self.Create.setGeometry(QRect(550, 630, 211, 81))
         font3 = QFont()
         font3.setFamilies(["Arial"])
-        font3.setPointSize(20)
+        font3.setPointSize(30)
         self.Create.setFont(font3)
         self.Create.setStyleSheet("QPushButton:checked{background: #080808;}\n"
 "QPushButton{color: Red; background: #1a1a1a;}")
         self.Create.clicked.connect(self.CreateCard)
         self.Title = QLabel(ArtifacterImageGenerator)
         self.Title.setObjectName("Title")
-        self.Title.setGeometry(QRect(210, 30, 381, 51))
-        font4 = QFont()
-        font4.setFamilies(["Arial"])
-        font4.setPointSize(15)
+        self.Title.setGeometry(QRect(170, 40, 641, 51))
         self.Title.setFont(font3)
         self.Title.setStyleSheet("QLabel{background: #1a1a1a;color: Red;}")
         self.Title.setAlignment(Qt.AlignCenter)
         self.UIDs = QLineEdit(ArtifacterImageGenerator)
         self.UIDs.setObjectName("UIDs")
-        self.UIDs.setGeometry(QRect(470, 370, 281, 51))
-        self.UIDs.setFont(font3)
+        self.UIDs.setGeometry(QRect(130, 120, 331, 51))
+        self.UIDs.setFont(font4)
         self.UIDs.setStyleSheet("QLineEdit{background: #1a1a1a;color: Red;}")
         self.UIDs.setAlignment(Qt.AlignCenter)
         self.UIDs.setPlaceholderText('UID入力場所')
         self.UIDs.textChanged.connect(self.CheckUID)
         self.UserName = QLabel(ArtifacterImageGenerator)
         self.UserName.setObjectName("UserName")
-        self.UserName.setGeometry(QRect(20, 110, 361, 41))
+        self.UserName.setGeometry(QRect(20, 190, 261, 41))
         self.UserName.setFont(font2)
         self.UserName.setStyleSheet("QLabel{background: #1a1a1a;}")
         self.UserName.setAlignment(Qt.AlignCenter)
         self.UserLevel = QLabel(ArtifacterImageGenerator)
         self.UserLevel.setObjectName(u"UserLevel")
-        self.UserLevel.setGeometry(QRect(400, 110, 341, 41))
+        self.UserLevel.setGeometry(QRect(290, 190, 171, 41))
         self.UserLevel.setAlignment(Qt.AlignCenter)
-        self.UserLevel.setFont(font4)
+        font5 = QFont()
+        font5.setFamilies([u"Arial"])
+        font5.setPointSize(15)
+        self.UserLevel.setFont(font5)
         self.UserLevel.setStyleSheet("QLabel{background: #1a1a1a;}")
         self.CalcLabel = QLabel(ArtifacterImageGenerator)
         self.CalcLabel.setObjectName(u"CalcLabel")
-        self.CalcLabel.setGeometry(QRect(40, 370, 201, 41))
-        self.CalcLabel.setFont(font3)
+        self.CalcLabel.setGeometry(QRect(30, 470, 201, 51))
+        self.CalcLabel.setFont(font4)
         self.CalcLabel.setStyleSheet("QLabel{background: #1a1a1a;}")
         self.CalcLabel.setAlignment(Qt.AlignCenter)
         self.CalcLabel.setText('計算方式')
         self.frame1 = QFrame(ArtifacterImageGenerator)
         self.frame1.setObjectName(u"frame1")
-        self.frame1.setGeometry(QRect(20, 370, 20, 241))
+        self.frame1.setGeometry(QRect(10, 470, 20, 241))
         self.frame1.setFrameShape(QFrame.VLine)
         self.frame1.setFrameShadow(QFrame.Sunken)
         self.frame2 = QFrame(ArtifacterImageGenerator)
         self.frame2.setObjectName("frame2")
-        self.frame2.setGeometry(QRect(250, 360, 81, 31))
+        self.frame2.setGeometry(QRect(240, 470, 141, 21))
         self.frame2.setFrameShape(QFrame.HLine)
         self.frame2.setFrameShadow(QFrame.Sunken)
         self.frame3 = QFrame(ArtifacterImageGenerator)
         self.frame3.setObjectName("frame3")
-        self.frame3.setGeometry(QRect(330, 370, 20, 241))
+        self.frame3.setGeometry(QRect(390, 470, 20, 241))
         self.frame3.setFrameShape(QFrame.VLine)
         self.frame3.setFrameShadow(QFrame.Sunken)
         self.frame4 = QFrame(ArtifacterImageGenerator)
         self.frame4.setObjectName("frame4")
-        self.frame4.setGeometry(QRect(20, 593, 321, 20))
+        self.frame4.setGeometry(QRect(10, 710, 391, 20))
         self.frame4.setFrameShape(QFrame.HLine)
         self.frame4.setFrameShadow(QFrame.Sunken)
         self.UIDLabel = QLabel(ArtifacterImageGenerator)
         self.UIDLabel.setObjectName("UIDLabel")
-        self.UIDLabel.setGeometry(QRect(360, 370, 101, 51))
-        self.UIDLabel.setFont(font3)
+        self.UIDLabel.setGeometry(QRect(20, 120, 101, 51))
+        self.UIDLabel.setFont(font4)
         self.UIDLabel.setStyleSheet("QLabel{background: #1a1a1a;}")
         self.UIDLabel.setAlignment(Qt.AlignCenter)
         self.UIDLabel.setText('UID:')
         self.Preview = QLabel(ArtifacterImageGenerator)
         self.Preview.setObjectName("Preview")
-        self.Preview.setGeometry(QRect(400, 170, 341, 171))
+        self.Preview.setGeometry(QRect(480, 140, 441, 291))
         self.Preview.setAlignment(Qt.AlignCenter)
         self.Preview.setText('プレビュー')
-        self.Preview.setStyleSheet("QLabel{background: #1a1a1a;}")
+        self.Preview.setStyleSheet(u"QLabel{background: #1a1a1a;}")
         self.ArtifacterprogressBar = QProgressBar(ArtifacterImageGenerator)
         self.ArtifacterprogressBar.setObjectName("ArtifacterprogressBar")
-        self.ArtifacterprogressBar.setGeometry(QRect(10, 630, 761, 41))
+        self.ArtifacterprogressBar.setGeometry(QRect(10, 730, 921, 41))
         self.ArtifacterprogressBar.setValue(0)
         self.ArtifacterprogressBar.setTextVisible(False)
         self.SavePathLabel = QLabel(ArtifacterImageGenerator)
         self.SavePathLabel.setObjectName(u"SavePathLabel")
-        self.SavePathLabel.setGeometry(QRect(360, 450, 101, 51))
-        self.SavePathLabel.setFont(font4)
+        self.SavePathLabel.setGeometry(QRect(440, 550, 121, 51))
+        self.SavePathLabel.setFont(font5)
         self.SavePathLabel.setStyleSheet(u"QLabel{background: #1a1a1a;}")
         self.SavePathLabel.setAlignment(Qt.AlignCenter)
         self.SavePathLabel.setText('保存場所:')
         self.SavePath = QLineEdit(ArtifacterImageGenerator)
         self.SavePath.setObjectName(u"SavePath")
-        self.SavePath.setGeometry(QRect(470, 450, 281, 51))
-        self.SavePath.setFont(font4)
+        self.SavePath.setGeometry(QRect(570, 550, 281, 51))
+        self.SavePath.setFont(font5)
         self.SavePath.setStyleSheet(u"QLineEdit{background: #1a1a1a;color: Red;}")
         self.SavePath.setAlignment(Qt.AlignCenter)
         self.SavePath.setPlaceholderText('保存場所')
+        self.SaveFileLabel = QLabel(ArtifacterImageGenerator)
+        self.SaveFileLabel.setObjectName(u"SaveFileLabel")
+        self.SaveFileLabel.setGeometry(QRect(440, 470, 121, 51))
+        self.SaveFileLabel.setFont(font5)
+        self.SaveFileLabel.setStyleSheet(u"QLabel{background: #1a1a1a;}")
+        self.SaveFileLabel.setAlignment(Qt.AlignCenter)
+        self.SaveFileLabel.setText('ファイル名:')
+        self.SaveFile = QLineEdit(ArtifacterImageGenerator)
+        self.SaveFile.setObjectName(u"SaveFile")
+        self.SaveFile.setGeometry(QRect(570, 470, 281, 51))
+        self.SaveFile.setFont(font5)
+        self.SaveFile.setStyleSheet(u"QLineEdit{background: #1a1a1a;color: Red;}")
+        self.SaveFile.setAlignment(Qt.AlignCenter)
+        self.SaveFile.setPlaceholderText('ファイル名')
         self.CheckGroups.addButton(self.Check_HP)
         self.CheckGroups.addButton(self.Check_Attack)
         self.CheckGroups.addButton(self.Check_Def)
         self.CheckGroups.addButton(self.Check_Ch)
         self.CheckGroups.addButton(self.Check_EM)
         self.CheckGroups.setExclusive(True)
+        self.SaveFile.setText('output.png')
         try:
-            self.UIDs.setText(concurrent.futures.ThreadPoolExecutor(os.cpu_count()*999999999999).submit(self.AutoPickUID).result())
+            self.UIDs.setText(concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999999999999999999).submit(self.AutoPickUID).result())
         except:
             pass
         if platform.system() == 'Windows':
@@ -10180,12 +10198,12 @@ class Ui_ArtifacterImageGenerator(object):
         self.WINDOW = ArtifacterImageGenerator
         ArtifacterImageGenerator.setWindowTitle("ArtifacterImageGenerator (待機中...)")
         ArtifacterImageGenerator.setWindowIcon(QPixmap(QSize(80, 80)).fromImage(QImage.fromData(QByteArray.fromBase64(b'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'))))
-        self.Title.setText('Artifacter Image Generator')
-        self.Check_HP.setText("HP")
-        self.Check_Attack.setText("攻撃")
-        self.Check_Def.setText("防御")
-        self.Check_Ch.setText("元素チャージ効率")
-        self.Check_EM.setText("元素熟知")
+        self.Title.setText('Artifacter Image Generator v1.1.1')
+        self.Check_HP.setText(" HP換算")
+        self.Check_Attack.setText(" 攻撃力換算")
+        self.Check_Def.setText(" 防御力換算")
+        self.Check_Ch.setText(" 元素チャージ効率換算")
+        self.Check_EM.setText(" 元素熟知換算")
         self.Create.setText("作成")
 
     def AutoPickUID(self):
@@ -10200,7 +10218,7 @@ class Ui_ArtifacterImageGenerator(object):
         PlayerJson = json.loads(urllib.request.urlopen(urllib.request.Request('https://enka.network/api/uid/{}?info'.format(uid), headers={'User-Agent': UsrAgn})).read())
         StoreCharacter = json.loads(CharacterJson())  # キャラクター情報のJSONを読み込み
         StoreLocale = json.loads(LocaleJa())
-        PlayerInfo = PlayerJson.get('playerInfo')
+        PlayerInfo = PlayerJson['playerInfo']
         if 'showAvatarInfoList' in PlayerInfo:
             for Avatar in PlayerInfo.get('showAvatarInfoList'):
                 Avatar['name'] = StoreLocale['ja'][str(StoreCharacter[str(Avatar['avatarId'])]['NameTextMapHash'])]
@@ -10483,8 +10501,12 @@ class Ui_ArtifacterImageGenerator(object):
         EvMask = ScoreEv.copy()
         Base.paste(ScoreEv, (1806, 345), mask=EvMask)
         ArtifactsIconList = [ArtifactsFlowerIconFileName, ArtifactsWingIconFileName, ArtifactsClockIconFileName, ArtifactsCupIconFileName, ArtifactsCrownIconFileName]
-        self._print('各聖遺物の画像を設定中...')
+        self._print('各聖遺物の画像を設定中...しばらくお待ちください...')
         self.ArtifacterprogressBar.setValue(min(((self.ArtifacterprogressBar.value() + 3.125) / 100) * 100.0, 100.0))
+        concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999999999999999999999999999999999).submit(self.ArtifactsC, config_font, Base, D, ImageEnhance, ArtifactsIconList, ArtifactsData, optionmap, disper, ScoreData)
+        self.ArtifacterprogressBar.setValue(min(((self.ArtifacterprogressBar.value() + 3.125 + 3.125 + 3.125 + 3.125) / 100) * 100.0, 100.0))
+
+    def ArtifactsC(self, config_font, Base, D, ImageEnhance, ArtifactsIconList, ArtifactsData, optionmap, disper, ScoreData):
         atftype = []
         for i, parts in enumerate(['flower', "wing", "clock", "cup", "crown"]):
             details = ArtifactsData.get(parts)
@@ -10492,10 +10514,12 @@ class Ui_ArtifacterImageGenerator(object):
                 continue
             atftype.append(details['type'])
             PreviewPaste = Image.new('RGBA', Base.size, (255, 255, 255, 0))
-            Preview = Image.open(BytesIO(urllib.request.urlopen(urllib.request.Request('https://enka.network/ui/{}'.format(ArtifactsIconList[i]), headers={'User-Agent': UsrAgn})).read())).resize((256, 256))
+            Preview = Image.open(BytesIO(urllib.request.urlopen(
+                urllib.request.Request('https://enka.network/ui/{}'.format(ArtifactsIconList[i]),
+                                       headers={'User-Agent': UsrAgn})).read())).resize((256, 256))
             enhancer = ImageEnhance.Brightness(Preview)
             Preview = enhancer.enhance(0.6)
-            Preview= Preview.resize((int(Preview.width*1.3), int(Preview.height*1.3)))
+            Preview = Preview.resize((int(Preview.width * 1.3), int(Preview.height * 1.3)))
             Pmask1 = Preview.copy()
             Pmask = Image.open(BytesIO(ArtifactAssets('ArtifactMask'))).convert('L').resize(Preview.size)
             Preview.putalpha(Pmask)
@@ -10518,7 +10542,7 @@ class Ui_ArtifacterImageGenerator(object):
                 mainvsize = D.textlength('{}%'.format(float(mainv)), config_font(49))
                 D.text((375 + i * 373 - mainvsize, 690), '{}%'.format(float(mainv)), font=config_font(49))
             else:
-                mainvsize = D.textlength(format(mainv,","),config_font(49))
+                mainvsize = D.textlength(format(mainv, ","), config_font(49))
                 D.text((375 + i * 373 - mainvsize, 690), format(mainv, ","), font=config_font(49))
             levlen = D.textlength('+{}'.format(details["Level"]), config_font(21))
             D.rounded_rectangle((373 + i * 373 - int(levlen), 748, 375 + i * 373, 771), fill='black', radius=2)
@@ -10526,18 +10550,19 @@ class Ui_ArtifacterImageGenerator(object):
             if details['Level'] == 20 and details['rarelity'] == 5:
                 c_data = {}
                 for a in details["sub"]:
-                    if a ['option'] in disper:
+                    if a['option'] in disper:
                         c_data[a['option']] = str(float(a["value"]))
                     else:
                         c_data[a['option']] = str(a["value"])
                 psb = self.CCop(c_data)
             if len(details['sub']) == 0:
                 continue
-            for a,sub in enumerate(details['sub']):
+            for a, sub in enumerate(details['sub']):
                 SubOP = sub['option']
                 SubVal = sub['value']
                 if SubOP in ['HP', '攻撃力', '防御力']:
-                    D.text((79 + 373 * i, 811 + 50 * a), optionmap.get(SubOP) or SubOP, font=config_font(25), fill=(255,255,255,190))
+                    D.text((79 + 373 * i, 811 + 50 * a), optionmap.get(SubOP) or SubOP, font=config_font(25),
+                           fill=(255, 255, 255, 190))
                 else:
                     D.text((79 + 373 * i, 811 + 50 * a), optionmap.get(SubOP) or SubOP, font=config_font(25))
                 SubIcon = Image.open(BytesIO(Artifactemotes(SubOP))).resize((30, 30))
@@ -10547,18 +10572,21 @@ class Ui_ArtifacterImageGenerator(object):
                     SubSize = D.textlength('{}%'.format(float(SubVal)), config_font(25))
                     D.text((375 + i * 373 - SubSize, 811 + 50 * a), '{}%'.format(float(SubVal)), font=config_font(25))
                 else:
-                    SubSize = D.textlength(format(SubVal,","), config_font(25))
-                    if SubOP in ['防御力','攻撃力','HP']:
-                        D.text((375 + i * 373 - SubSize, 811 + 50 * a),format(SubVal,","), font=config_font(25), fill=(255, 255, 255, 190))
+                    SubSize = D.textlength(format(SubVal, ","), config_font(25))
+                    if SubOP in ['防御力', '攻撃力', 'HP']:
+                        D.text((375 + i * 373 - SubSize, 811 + 50 * a), format(SubVal, ","), font=config_font(25),
+                               fill=(255, 255, 255, 190))
                     else:
-                        D.text((375 + i * 373 - SubSize, 811 + 50 * a),format(SubVal,","), font=config_font(25), fill=(255, 255, 255))
+                        D.text((375 + i * 373 - SubSize, 811 + 50 * a), format(SubVal, ","), font=config_font(25),
+                               fill=(255, 255, 255))
                 if details['Level'] == 20 and details['rarelity'] == 5:
-                    nobi = D.textlength("+".join(map(str,psb[a])), font=config_font(11))
-                    D.text((375 + i * 373 - nobi, 840 + 50 * a), "+".join(map(str,psb[a])), fill=(255, 255, 255, 160), font=config_font(11))
+                    nobi = D.textlength("+".join(map(str, psb[a])), font=config_font(11))
+                    D.text((375 + i * 373 - nobi, 840 + 50 * a), "+".join(map(str, psb[a])), fill=(255, 255, 255, 160),
+                           font=config_font(11))
             Score = float(ScoreData[parts])
-            ATFScorelen = D.textlength(str(Score),config_font(36))
+            ATFScorelen = D.textlength(str(Score), config_font(36))
             D.text((380 + i * 373 - ATFScorelen, 1016), str(Score), font=config_font(36))
-            D.text((295 + i * 373 - ATFScorelen, 1025),'Score', font=config_font(27), fill=(160,160,160))
+            D.text((295 + i * 373 - ATFScorelen, 1025), 'Score', font=config_font(27), fill=(160, 160, 160))
             PointRefer = {
                 "total": {
                     "SS": 220,
@@ -10617,17 +10645,14 @@ class Ui_ArtifacterImageGenerator(object):
                 D.text((1536, 263), n, fill=(0, 255, 0), font=config_font(23))
                 D.rounded_rectangle((1818, 263, 1862, 288), 1, 'black')
                 D.text((1831, 265), str(q), font=config_font(19))
-        
-        self._print('保存先を作成中...')
         os.makedirs(self.SavePath.text(), exist_ok=True)
-        Base.save(os.path.join(self.SavePath.text(), 'output.png'))
+        Base.save(os.path.join(self.SavePath.text(), self.SaveFile.text()))
         BasePreviewBytes = BytesIO()
         BasePreview = QPixmap()
         Base.save(BasePreviewBytes, 'png')
         BasePreview.loadFromData(BasePreviewBytes.getvalue())
-        self.Preview.setPixmap(BasePreview.scaled(400, 175, Qt.KeepAspectRatio, Qt.FastTransformation))
+        self.Preview.setPixmap(BasePreview.scaled(440, 300, Qt.KeepAspectRatio, Qt.FastTransformation))
         self._print('完了!　出力先は「{}」です。'.format(self.SavePath.text()))
-        self.ArtifacterprogressBar.setValue(min(((self.ArtifacterprogressBar.value() + 3.125 + 3.125 + 3.125) / 100) * 100.0, 100.0))
 
     def CharacterInfoExtractor(self, uid, avatarInfo, score_state):
         BaseJson = json.loads(FormatJson()) # ベースになるJSON
@@ -10844,7 +10869,6 @@ class Ui_ArtifacterImageGenerator(object):
             rootdir = os.path.join(os.getenv('USERPROFILE'), 'ArtifacterImageOutput')
         else:
             rootdir = os.path.join(os.getenv('HOME'), 'ArtifacterImageOutput')
-        self.Preview.setPixmap(QPixmap(os.path.join(rootdir, 'output.png')).scaled(360, 175, Qt.KeepAspectRatio,Qt.FastTransformation))
 
     def CheckUID(self):
         if len(self.UIDs.text()) == 9:
