@@ -13,6 +13,7 @@ import time
 import urllib.request
 from collections import Counter
 from decimal import Decimal, ROUND_HALF_UP
+from ImageBytes import ArtifactGrades, Artifactemotes, ArtifactBaseImages, ArtifactAssets, ArtifactConstellation, ArtifactRarelity
 from io import BytesIO
 from PIL import Image, ImageFont, ImageDraw, ImageEnhance
 from PIL import ImageFile
