@@ -15,8 +15,8 @@
 
 <h2>GUI版の画像出力先</h2>
 <ul>
-	<li>Windowsなら「%USERPROFILE%\ArtifacterImageOutput」</li><br />
-	<li>Linuxなら「$HOME/ArtifacterImageOutput」</li>
+	<li>Windowsなら「%USERPROFILE%\ArtifacterImageOutput\「UID」」</li><br />
+	<li>Linuxなら「$HOME/ArtifacterImageOutput/「UID」/」</li>
 </ul>
 <h2>作者さん</h2>
 <ul>
