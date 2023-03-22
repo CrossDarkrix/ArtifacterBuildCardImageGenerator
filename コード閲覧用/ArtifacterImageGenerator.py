@@ -10152,7 +10152,7 @@ def BuildCardCreater(data):
     ArtifactsCupIconFileName: str = ArtifactsData['cup']['icon']
     ArtifactsCrownIconFileName: str = ArtifactsData['crown']['icon']
     config_font = lambda size : ImageFont.truetype(BytesIO(ArtifactAssets('ja-jp.ttf')),size)
-    Base = Image.open(BytesIO(ArtifactBaseImages(element)))
+    Base = Image.open(BytesIO(ArtifactBaseImages(element))).convert('RGBA')
     if CharacterENName == 'Traveler':
         CharacterImage = Image.open(BytesIO(urllib.request.urlopen(urllib.request.Request('https://enka.network/ui/{}'.format(CharacterIconFileName), headers={'User-Agent': UsrAgn})).read())).convert('RGBA')
     else:
