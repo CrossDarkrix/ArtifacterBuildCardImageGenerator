@@ -10216,7 +10216,7 @@ def BuildCardCreater(data):
     levellength = D.textlength('Lv.{}'.format(CharacterLevel), font=config_font(25))
     friendshiplength = D.textlength(str(FriendShip), font=config_font(25))
     D.text((35, 75), 'Lv.{}'.format(CharacterLevel), font=config_font(25))
-    D.rounded_rectangle((35 + levellength + 5, 74, 77 + levellength + friendshiplength, 102), radius=2, fill="black")
+    D.rounded_rectangle((35 + levellength + 5, 74, 77 + levellength + friendshiplength, 102), radius=0, outline=None, width=0)
     FriendShipIcon = Image.open(BytesIO(ArtifactAssets('Love'))).convert('RGBA')
     FriendShipIcon = FriendShipIcon.resize((int(FriendShipIcon.width * (24 / FriendShipIcon.height)), 24))
     Fmask = FriendShipIcon.copy()
@@ -10257,7 +10257,7 @@ def BuildCardCreater(data):
             D.text((1360 - HPsize - HPbsize - 1, 97 + i * 70), HPbase, font=config_font(12), fill=(255, 255, 255, 180))
     D.text((1582, 47), WeaponName, font=config_font(26))
     wlebellen = D.textlength(f'Lv.{WeaponLevel}', font=config_font(24))
-    D.rounded_rectangle((1582, 80, 1582 + wlebellen + 4, 108), radius=1, fill='black')
+    D.rounded_rectangle((1582, 80, 1582 + wlebellen + 4, 108), radius=0, outline=None, width=0)
     D.text((1584, 82), f'Lv.{WeaponLevel}', font=config_font(24))
     BaseAtk = Image.open(BytesIO(Artifactemotes('基礎攻撃力'))).resize((23, 23))
     BaseAtkmask = BaseAtk.copy()
@@ -10274,7 +10274,7 @@ def BuildCardCreater(data):
         BaseAtkmask = BaseAtk.copy()
         Base.paste(BaseAtk, (1600, 155), mask=BaseAtkmask)
         D.text((1623, 155), f'{optionmap.get(WeaponSubOPKey) or WeaponSubOPKey}  {str(WeaponSubOPValue)+"%" if WeaponSubOPKey in disper else format(WeaponSubOPValue,",")}', font=config_font(23))
-    D.rounded_rectangle((1430, 45, 1470, 70), radius=1, fill='black')
+    D.rounded_rectangle((1430, 45, 1470, 70), radius=0, outline=None, width=0)
     D.text((1433, 46), f'R{WeaponRank}', font=config_font(24))
     ScoreLen = D.textlength(f'{ScoreTotal}', config_font(75))
     D.text((1652 - ScoreLen // 2, 420), str(ScoreTotal), font=config_font(75))
@@ -10328,7 +10328,7 @@ def BuildCardCreater(data):
             mainvsize = D.textlength(format(mainv,","),config_font(49))
             D.text((375 + i * 373 - mainvsize, 690), format(mainv, ","), font=config_font(49))
         levlen = D.textlength('+{}'.format(details["Level"]), config_font(21))
-        D.rounded_rectangle((373 + i * 373 - int(levlen), 748, 375 + i * 373, 771), fill='black', radius=2)
+        D.rounded_rectangle((373 + i * 373 - int(levlen), 748, 375 + i * 373, 771), radius=0, outline=None, width=0)
         D.text((374 + i * 373 - levlen, 749), '+{}'.format(details["Level"]), font=config_font(21))
         if details['Level'] == 20 and details['rarelity'] == 5:
             c_data = {}
@@ -10417,11 +10417,11 @@ def BuildCardCreater(data):
     for i, (n, q) in enumerate(SetBounus.items()):
         if len(SetBounus) == 2:
             D.text((1536, 243 + i * 35), n, fill=(0, 255, 0), font=config_font(23))
-            D.rounded_rectangle((1818, 243 + i * 35, 1862, 266 + i * 35), 1, 'black')
+            D.rounded_rectangle((1818, 243 + i * 35, 1862, 266 + i * 35), 1, width=0)
             D.text((1835, 243 + i * 35), str(q), font=config_font(19))
         if len(SetBounus) == 1:
             D.text((1536, 263), n, fill=(0, 255, 0), font=config_font(23))
-            D.rounded_rectangle((1818, 263, 1862, 288), 1, 'black')
+            D.rounded_rectangle((1818, 263, 1862, 288), 1, width=0)
             D.text((1831, 265), str(q), font=config_font(19))
     os.makedirs(os.path.join(os.getcwd(), 'ArtifacterImageOutput'), exist_ok=True)
     Base.save(os.path.join(os.getcwd(), 'ArtifacterImageOutput', 'output.png'))
