@@ -10731,7 +10731,6 @@ class Ui_ArtifacterImageGenerator(object):
                     "A": 30
                 }
             }
-
             if Score >= PointRefer[parts]['SS']:
                 ScoreImage = concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(Image.open, BytesIO(ArtifactGrades('SS'))).result()
             elif Score >= PointRefer[parts]['S']:

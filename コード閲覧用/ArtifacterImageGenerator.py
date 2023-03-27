@@ -10398,7 +10398,6 @@ def BuildCardCreater(data):
                 "A": 30
             }
         }
-
         if Score >= PointRefer[parts]['SS']:
             ScoreImage = Image.open(BytesIO(ArtifactGrades('SS')))
         elif Score >= PointRefer[parts]['S']:
