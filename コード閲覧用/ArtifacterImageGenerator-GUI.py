@@ -11007,10 +11007,20 @@ class Ui_ArtifacterImageGenerator(object):
         concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(self.DecorationList)
 
     def DecorationList(self):
+        mini_jp1 = ('ぁ', 'ぃ', 'ぅ', 'ぇ', 'ぉ', 'っ', 'ゃ', 'ゅ', 'ょ')
+        mini_jp2 = ('ァ', 'ィ', 'ゥ', 'ェ', 'ォ', 'ッ', 'ャ', 'ュ', 'ョ') # 
         StoreCharacter = json.loads(CharacterJson())
         for index, avatar in enumerate(self.avatar_list):
             if 3 <= len(avatar['name']):
                 if 'ー' == avatar['name'][-1]:
+                    Name = '{} \t\t'.format(avatar['name'])
+                elif True in [i.endswith(mini_jp2) for i in avatar['name']] and not 'ー' in avatar['name']:
+                    Name = '{} \t'.format(avatar['name'])
+                elif True in [i.endswith(mini_jp1) for i in avatar['name']] and not 'ー' in avatar['name']:
+                    Name = '{} \t'.format(avatar['name'])
+                elif True in [i.endswith(mini_jp2) for i in avatar['name']]:
+                    Name = '{} \t\t'.format(avatar['name'])
+                elif True in [s.endswith(mini_jp1) for s in avatar['name']]:
                     Name = '{} \t\t'.format(avatar['name'])
                 else:
                     Name = '{} \t'.format(avatar['name'])
