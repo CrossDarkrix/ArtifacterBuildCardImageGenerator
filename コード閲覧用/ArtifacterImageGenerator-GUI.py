@@ -11,7 +11,7 @@ import platform
 import sys
 import urllib.request
 from collections import Counter
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import Decimal, ROUND_HALF_UP, ROUND_DOWN
 from ImageBytes import ArtifactGrades, Artifactemotes, ArtifactBaseImages, ArtifactAssets, ArtifactConstellation, ArtifactRarelity
 from io import BytesIO
 from PIL import Image, ImageFont, ImageDraw, ImageEnhance, ImageFile, ImageQt
@@ -10850,10 +10850,7 @@ class Ui_ArtifacterImageGenerator(object):
                     relicScore += Decimal(relic['sub'][index]['value'] * 2)
                 Scores[RelicType[relicInfo['flat']['equipType']]] = Decimal(relicScore).quantize(Decimal('0.1'), rounding=ROUND_HALF_UP)
             RelicTotalScore += Decimal(relicScore)
-        try:
-            Scores['total'] = '{}.{}'.format('{}'.format(RelicTotalScore).split('.')[0], '{}'.format(RelicTotalScore).split('.')[1][:1])
-        except:
-            Scores['total'] = '{}'.format(RelicTotalScore)
+        Scores['total'] = '{:.1f}'.format(Decimal(RelicTotalScore).quantize(Decimal('0.1'), rounding=ROUND_DOWN))
         return json.dumps(BaseJson, indent=2, ensure_ascii=False, default=self.decimal_to_float)
 
     def CCop(self, data:dict):
