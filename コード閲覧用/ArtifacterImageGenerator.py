@@ -10115,7 +10115,10 @@ def CharacterInfoExtractor(uid, avatarInfo, score_state):
                 relicScore += Decimal(relic['sub'][index]['value'] * 2)
             Scores[RelicType[relicInfo['flat']['equipType']]] = Decimal(relicScore).quantize(Decimal('0.1'), rounding=ROUND_HALF_UP)
         RelicTotalScore += Decimal(relicScore)
-    Scores['total'] = RelicTotalScore
+    try:
+        Scores['total'] = '{}.{}'.format('{}'.format(RelicTotalScore).split('.')[0], '{}'.format(RelicTotalScore).split('.')[1][:1])
+    except:
+        Scores['total'] = '{}'.format(RelicTotalScore)
     return json.dumps(BaseJson, indent=2, ensure_ascii=False, default=decimal_to_float)
 
 def BuildCardCreater(data):
