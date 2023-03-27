@@ -10279,7 +10279,7 @@ class Ui_ArtifacterImageGenerator(object):
         self.VersionLabel.setFont(font6)
         self.VersionLabel.setStyleSheet(u"QLabel{background: #1a1a1a;}")
         self.VersionLabel.setAlignment(Qt.AlignCenter)
-        self.VersionLabel.setText('v1.2.2')
+        self.VersionLabel.setText('v1.2.3')
         self.CheckGroups.addButton(self.Check_HP)
         self.CheckGroups.addButton(self.Check_Attack)
         self.CheckGroups.addButton(self.Check_Def)
@@ -10850,7 +10850,10 @@ class Ui_ArtifacterImageGenerator(object):
                     relicScore += Decimal(relic['sub'][index]['value'] * 2)
                 Scores[RelicType[relicInfo['flat']['equipType']]] = Decimal(relicScore).quantize(Decimal('0.1'), rounding=ROUND_HALF_UP)
             RelicTotalScore += Decimal(relicScore)
-        Scores['total'] = RelicTotalScore
+        try:
+            Scores['total'] = '{}.{}'.format('{}'.format(RelicTotalScore).split('.')[0], '{}'.format(RelicTotalScore).split('.')[1][:1])
+        except:
+            Scores['total'] = '{}'.format(RelicTotalScore)
         return json.dumps(BaseJson, indent=2, ensure_ascii=False, default=self.decimal_to_float)
 
     def CCop(self, data:dict):
