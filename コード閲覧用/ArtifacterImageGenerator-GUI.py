@@ -6,6 +6,7 @@ import os
 import re
 import shutil
 import subprocess
+import threading
 import tempfile
 import platform
 import sys
@@ -10151,7 +10152,7 @@ class Ui_ArtifacterImageGenerator(object):
         self.UIDs.setStyleSheet("QLineEdit{background: #1a1a1a;color: #ffffff;}")
         self.UIDs.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
         self.UIDs.setPlaceholderText(' UID入力場所')
-        self.UIDs.textChanged.connect(self.CheckUID)
+        self.UIDs.textChanged.connect(self.SpeedyStartup)
         self.UserName = QLabel(ArtifacterImageGenerator)
         self.UserName.setObjectName("UserName")
         self.UserName.setGeometry(QRect(20, 190, 261, 41))
@@ -10279,7 +10280,7 @@ class Ui_ArtifacterImageGenerator(object):
         self.VersionLabel.setFont(font6)
         self.VersionLabel.setStyleSheet(u"QLabel{background: #1a1a1a;}")
         self.VersionLabel.setAlignment(Qt.AlignCenter)
-        self.VersionLabel.setText('v1.2.3')
+        self.VersionLabel.setText('v1.2.4')
         self.CheckGroups.addButton(self.Check_HP)
         self.CheckGroups.addButton(self.Check_Attack)
         self.CheckGroups.addButton(self.Check_Def)
@@ -10311,6 +10312,9 @@ class Ui_ArtifacterImageGenerator(object):
         self.Check_Ch.setText(" 元素チャージ効率(換算)")
         self.Check_EM.setText(" 元素熟知(換算)")
         self.Create.setText("作成")
+
+    def SpeedyStartup(self):
+        threading.Thread(target=self.CheckUID, daemon=True).start()
 
     def OpenToPath(self):
         os.makedirs(self.SavePath.text(), exist_ok=True)
@@ -10731,6 +10735,7 @@ class Ui_ArtifacterImageGenerator(object):
                     "A": 30
                 }
             }
+
             if Score >= PointRefer[parts]['SS']:
                 ScoreImage = concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(Image.open, BytesIO(ArtifactGrades('SS'))).result()
             elif Score >= PointRefer[parts]['S']:
