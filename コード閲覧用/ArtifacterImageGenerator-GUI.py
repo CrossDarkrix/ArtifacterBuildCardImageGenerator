@@ -10782,7 +10782,7 @@ class Ui_ArtifacterImageGenerator(object):
                 concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(D.rounded_rectangle, (1818, 263, 1862, 288), 1, width=0)
                 concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(D.text, (1605, 830), str(q), font=config_font(19))
         os.makedirs(self.SavePath.text(), exist_ok=True)
-        concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(self.Preview.setPixmap, QPixmap(ImageQt.ImageQt(Base)).scaled(440, 300, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+        concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(self.Preview.setPixmap, QPixmap(ImageQt.ImageQt(Base)).scaled(440, 250, Qt.KeepAspectRatio, Qt.SmoothTransformation))
         concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(self.SaveCard, Base)
         self._print('完了!　出力先は「{}」です。'.format(os.path.join(self.SavePath.text(), self.SaveFile.text())))
         ClickCount[0] = '0'
