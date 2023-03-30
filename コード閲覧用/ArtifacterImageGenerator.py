@@ -10157,23 +10157,16 @@ def BuildCardCreater(data):
         CharacterImage = Image.open(BytesIO(urllib.request.urlopen(urllib.request.Request('https://enka.network/ui/{}'.format(CharacterIconFileName), headers={'User-Agent': UsrAgn})).read())).convert('RGBA')
     else:
         CharacterImage = Image.open(BytesIO(urllib.request.urlopen(urllib.request.Request('https://enka.network/ui/{}'.format(CharacterIconFileName), headers={'User-Agent': UsrAgn})).read())).convert('RGBA')
-    Shadow = Image.open(BytesIO(ArtifactAssets('Shadow'))).resize(Base.size)
-    CharacterImage = CharacterImage.crop((289, 0, 1728, 1024))
-    CharacterImage = CharacterImage.resize((int(CharacterImage.width*0.75), int(CharacterImage.height*0.75)))
+    CharacterImage = CharacterImage.crop((289, 0, 1728, 1100))
+    CharacterImage = CharacterImage.resize((int(CharacterImage.width*0.9), int(CharacterImage.height*0.58)))
     CharacterAvatarMask = CharacterImage.copy()
-    if CharacterName == 'アルハイゼン':
-        CharacterAvatarMask2 = Image.open(BytesIO(ArtifactAssets('Alhaitham'))).convert('L').resize(CharacterImage.size)
-    else:
-        CharacterAvatarMask2 = Image.open(BytesIO(ArtifactAssets('CharacterMask'))).convert('L').resize(CharacterImage.size)
-    CharacterImage.putalpha(CharacterAvatarMask2)
     CharacterPaste = Image.new('RGBA', Base.size, (255, 255, 255, 0))
-    CharacterPaste.paste(CharacterImage, (-160, -45), mask=CharacterAvatarMask)
+    CharacterPaste.paste(CharacterImage, (-205, 70), mask=CharacterAvatarMask)
     Base = Image.alpha_composite(Base, CharacterPaste)
-    Base = Image.alpha_composite(Base, Shadow)
     Weapon = Image.open(BytesIO(urllib.request.urlopen(urllib.request.Request('https://enka.network/ui/{}'.format(WeaponIconFileName), headers={'User-Agent': UsrAgn})).read())).convert('RGBA').resize((128, 128))
     WeaponPaste = Image.new('RGBA', Base.size, (255, 255, 255, 0))
     WeaponMask = Weapon.copy()
-    WeaponPaste.paste(Weapon, (1430, 50), mask=WeaponMask)
+    WeaponPaste.paste(Weapon, (1185, 60), mask=WeaponMask)
     Base = Image.alpha_composite(Base, WeaponPaste)
     try:
         WeaponRImage = Image.open(BytesIO(ArtifactRarelity('{}'.format(WeaponRarelity)))).convert('RGBA')
@@ -10182,7 +10175,7 @@ def BuildCardCreater(data):
     WeaponRImage = WeaponRImage.resize((int(WeaponRImage.width * 0.97), int(WeaponRImage.height*0.97)))
     WeaponRPaste = Image.new('RGBA', Base.size, (255, 255, 255, 0))
     WeaponRMask = WeaponRImage.copy()
-    WeaponRPaste.paste(WeaponRImage, (1422, 173), mask=WeaponRMask)
+    WeaponRPaste.paste(WeaponRImage, (1182, 182), mask=WeaponRMask)
     Base = Image.alpha_composite(Base, WeaponRPaste)
     TalentBase = Image.open(BytesIO(ArtifactAssets('TalentBack')))
     TalentBasePaste = Image.new('RGBA', Base.size, (255, 255, 255, 0))
@@ -10193,23 +10186,22 @@ def BuildCardCreater(data):
         TalentMask = Talent.copy()
         TalentPaste.paste(Talent, (TalentPaste.width // 2 - 25, TalentPaste.height // 2 - 25), mask=TalentMask)
         TalentObject = Image.alpha_composite(TalentBase, TalentPaste)
-        TalentBasePaste.paste(TalentObject, (15, 330 + i * 105))
+        TalentBasePaste.paste(TalentObject, (1005, 25 + i * 105))
     Base = Image.alpha_composite(Base, TalentBasePaste)
     CBase = Image.open(BytesIO(ArtifactConstellation(element))).resize((90, 90)).convert('RGBA')
     Clock = Image.open(BytesIO(ArtifactConstellation('{}LOCK'.format(element)))).convert('RGBA')
     ClockMask = Clock.copy()
     CPaste = Image.new('RGBA', Base.size, (255, 255, 255, 0))
     for c, t in enumerate(CharacterTalentIcons):
-
         if c > int(CharacterConstellations):
-            CPaste.paste(Clock, (666, -10 + (c + 1) * 93), mask=ClockMask)
+            CPaste.paste(Clock, (1016, 247 + (c +1) * 93), mask=ClockMask)
         else:
             CharaC = Image.open(BytesIO(urllib.request.urlopen(urllib.request.Request('https://enka.network/ui/{}'.format(t), headers={'User-Agent': UsrAgn})).read())).convert('RGBA').resize((45, 45))
             CharaCPaste = Image.new('RGBA', CBase.size, (255, 255, 255, 0))
             CharaCMask = CharaC.copy()
             CharaCPaste.paste(CharaC, (int(CharaCPaste.width / 2) - 25, int(CharaCPaste.height / 2) - 23), mask=CharaCMask)
             Cobject = Image.alpha_composite(CBase, CharaCPaste)
-            CPaste.paste(Cobject, (666, -10 + (c + 1) * 93))
+            CPaste.paste(Cobject, (1010, 247 + (c + 1) * 93))
     Base = Image.alpha_composite(Base, CPaste)
     D = ImageDraw.Draw(Base)
     D.text((30, 20), CharacterName, font=config_font(48))
@@ -10222,9 +10214,9 @@ def BuildCardCreater(data):
     Fmask = FriendShipIcon.copy()
     Base.paste(FriendShipIcon, (42 + int(levellength), 76), mask=Fmask)
     D.text((73 + levellength, 74), str(FriendShip), font=config_font(25))
-    D.text((42, 397), 'Lv.{}'.format(CharacterTalent["通常"]), font=config_font(17), fill='aqua' if CharacterTalent["通常"] >= 10 else None)
-    D.text((42, 502), 'Lv.{}'.format(CharacterTalent["スキル"]), font=config_font(17), fill='aqua' if CharacterTalent["スキル"] >= 10 else None)
-    D.text((42, 607), 'Lv.{}'.format(CharacterTalent["爆発"]), font=config_font(17), fill='aqua' if CharacterTalent["爆発"] >= 10 else None)
+    D.text((1033, 114), 'Lv.{}'.format(CharacterTalent["通常"]), font=config_font(17), fill='aqua' if CharacterTalent["通常"] >= 10 else None)
+    D.text((1033, 214), 'Lv.{}'.format(CharacterTalent["スキル"]), font=config_font(17), fill='aqua' if CharacterTalent["スキル"] >= 10 else None)
+    D.text((1033, 314), 'Lv.{}'.format(CharacterTalent["爆発"]), font=config_font(17), fill='aqua' if CharacterTalent["爆発"] >= 10 else None)
     def genbasetext(state):
         sumv = CharacterStatus[state]
         plusv = sumv - CharacterBase[state]
@@ -10239,30 +10231,30 @@ def BuildCardCreater(data):
             i = StateOP.index(k)
         except:
             i = 7
-            D.text((844, 67 + i * 70), k, font=config_font(26))
+            D.text((1266, 716), k, font=config_font(40))
             opicon = Image.open(BytesIO(Artifactemotes(k))).resize((40, 40))
             oppaste = Image.new('RGBA', Base.size, (255, 255, 255, 0))
-            oppaste.paste(opicon, (789, 65 + i * 70))
+            oppaste.paste(opicon, (1202, 716))
             Base = Image.alpha_composite(Base, oppaste)
             D = ImageDraw.Draw(Base)
         if k not in disper:
-            statelen = D.textlength(format(v, ","), config_font(26))
-            D.text((1360 - statelen, 67 + i * 70), format(v, ","), font=config_font(26))
+            statelen = D.textlength(format(v, ","), config_font(40))
+            D.text((1780 - statelen, 286 + i * 61), format(v, ","), font=config_font(40))
         else:
-            statelen = D.textlength(f'{float(v)}%', config_font(26))
-            D.text((1360 - statelen, 67 + i * 70), f'{float(v)}%', font=config_font(26))
+            statelen = D.textlength(f'{float(v)}%', config_font(40))
+            D.text((1780 - statelen, 286 + i * 61), f'{float(v)}%', font=config_font(40))
         if k in ['HP', '防御力', '攻撃力']:
             HPpls, HPbase, HPsize, HPbsize = genbasetext(k)
-            D.text((1360 - HPsize, 97 + i * 70), HPpls, fill=(0,255,0,180), font=config_font(12))
-            D.text((1360 - HPsize - HPbsize - 1, 97 + i * 70), HPbase, font=config_font(12), fill=(255, 255, 255, 180))
-    D.text((1582, 47), WeaponName, font=config_font(26))
+            D.text((1780 - HPsize, 335 + i * 60), HPpls, fill=(0,255,0,180), font=config_font(12))
+            D.text((1780 - HPsize - HPbsize, 335 + i * 60), HPbase, font=config_font(12), fill=(255, 255, 255, 180))
+    D.text((1390, 47), WeaponName, font=config_font(30))
     wlebellen = D.textlength(f'Lv.{WeaponLevel}', font=config_font(24))
     D.rounded_rectangle((1582, 80, 1582 + wlebellen + 4, 108), radius=0, outline=None, width=0)
-    D.text((1584, 82), f'Lv.{WeaponLevel}', font=config_font(24))
+    D.text((1390, 82), f'Lv.{WeaponLevel}', font=config_font(24))
     BaseAtk = Image.open(BytesIO(Artifactemotes('基礎攻撃力'))).resize((23, 23))
     BaseAtkmask = BaseAtk.copy()
     Base.paste(BaseAtk, (1600, 120), mask=BaseAtkmask)
-    D.text((1623, 120), '基礎攻撃力  {}'.format(WeaponBaseATK), font=config_font(23))
+    D.text((1420, 118), '基礎攻撃力  {}'.format(WeaponBaseATK), font=config_font(23))
     optionmap = {
         "攻撃パーセンテージ": "攻撃%",
         "防御パーセンテージ": "防御%",
@@ -10272,14 +10264,14 @@ def BuildCardCreater(data):
     if WeaponSubOPKey != None:
         BaseAtk = Image.open(BytesIO(Artifactemotes(WeaponSubOPKey))).resize((23, 23))
         BaseAtkmask = BaseAtk.copy()
-        Base.paste(BaseAtk, (1600, 155), mask=BaseAtkmask)
-        D.text((1623, 155), f'{optionmap.get(WeaponSubOPKey) or WeaponSubOPKey}  {str(WeaponSubOPValue)+"%" if WeaponSubOPKey in disper else format(WeaponSubOPValue,",")}', font=config_font(23))
+        Base.paste(BaseAtk, (1395, 155), mask=BaseAtkmask)
+        D.text((1420, 153), f'{optionmap.get(WeaponSubOPKey) or WeaponSubOPKey}  {str(WeaponSubOPValue)+"%" if WeaponSubOPKey in disper else format(WeaponSubOPValue,",")}', font=config_font(23))
     D.rounded_rectangle((1430, 45, 1470, 70), radius=0, outline=None, width=0)
-    D.text((1433, 46), f'R{WeaponRank}', font=config_font(24))
+    D.text((1180, 46), f'R{WeaponRank}', font=config_font(24))
     ScoreLen = D.textlength(f'{ScoreTotal}', config_font(75))
-    D.text((1652 - ScoreLen // 2, 420), str(ScoreTotal), font=config_font(75))
+    D.text((440 - ScoreLen // 2, 723), str(ScoreTotal), font=config_font(100))
     blen = D.textlength('{}換算'.format(ScoreCVBasis), font=config_font(24))
-    D.text((1867 - blen, 585), '{}換算'.format(ScoreCVBasis), font=config_font(24))
+    D.text((916 - blen, 840), '{}換算'.format(ScoreCVBasis), font=config_font(24))
     if float(ScoreTotal) >= 220:
         ScoreEv = Image.open(BytesIO(ArtifactGrades('SS')))
     elif float(ScoreTotal) >= 200:
@@ -10290,7 +10282,7 @@ def BuildCardCreater(data):
         ScoreEv = Image.open(BytesIO(ArtifactGrades('B')))
     ScoreEv = ScoreEv.resize((ScoreEv.width // 8, ScoreEv.height // 8))
     EvMask = ScoreEv.copy()
-    Base.paste(ScoreEv, (1806, 345), mask=EvMask)
+    Base.paste(ScoreEv, (850, 708), mask=EvMask)
     ArtifactsIconList = [ArtifactsFlowerIconFileName, ArtifactsWingIconFileName, ArtifactsClockIconFileName, ArtifactsCupIconFileName, ArtifactsCrownIconFileName]
     atftype = []
     for i, parts in enumerate(['flower', "wing", "clock", "cup", "crown"]):
@@ -10306,30 +10298,30 @@ def BuildCardCreater(data):
         Pmask1 = Preview.copy()
         Pmask = Image.open(BytesIO(ArtifactAssets('ArtifactMask'))).convert('L').resize(Preview.size)
         Preview.putalpha(Pmask)
-        if parts in ['flower', 'crown']:
-            PreviewPaste.paste(Preview, (-37 + 373 * i, 570), mask=Pmask1)
+        if parts in ['flower']:
+            PreviewPaste.paste(Preview, (-23 + 380 * i, 856), mask=Pmask1)
         elif parts in ['wing', 'cup']:
-            PreviewPaste.paste(Preview, (-36 + 373 * i, 570), mask=Pmask1)
+            PreviewPaste.paste(Preview, (-30 + 380 * i, 856), mask=Pmask1)
         else:
-            PreviewPaste.paste(Preview, (-35 + 373 * i, 570), mask=Pmask1)
+            PreviewPaste.paste(Preview, (-38 + 380 * i, 856), mask=Pmask1)
         Base = Image.alpha_composite(Base, PreviewPaste)
         D = ImageDraw.Draw(Base)
         mainop = details['main']['option']
         mainoplen = D.textlength(optionmap.get(mainop) or mainop, font=config_font(29))
-        D.text((375 + i * 373 - int(mainoplen), 655), optionmap.get(mainop) or mainop, font=config_font(29))
+        D.text((375 + i * 373 - int(mainoplen), 941), optionmap.get(mainop) or mainop, font=config_font(29))
         MainIcon = Image.open(BytesIO(Artifactemotes(mainop))).convert('RGBA').resize((35, 35))
         MainMask = MainIcon.copy()
-        Base.paste(MainIcon, (340 + i * 373 - int(mainoplen), 655), mask=MainMask)
+        Base.paste(MainIcon, (335 + i * 373 - int(mainoplen), 941), mask=MainMask)
         mainv = details['main']['value']
         if mainop in disper:
             mainvsize = D.textlength('{}%'.format(float(mainv)), config_font(49))
-            D.text((375 + i * 373 - mainvsize, 690), '{}%'.format(float(mainv)), font=config_font(49))
+            D.text((375 + i * 373 - mainvsize, 971), '{}%'.format(float(mainv)), font=config_font(49))
         else:
             mainvsize = D.textlength(format(mainv,","),config_font(49))
-            D.text((375 + i * 373 - mainvsize, 690), format(mainv, ","), font=config_font(49))
+            D.text((375 + i * 373 - mainvsize, 971), format(mainv, ","), font=config_font(49))
         levlen = D.textlength('+{}'.format(details["Level"]), config_font(21))
-        D.rounded_rectangle((373 + i * 373 - int(levlen), 748, 375 + i * 373, 771), radius=0, outline=None, width=0)
-        D.text((374 + i * 373 - levlen, 749), '+{}'.format(details["Level"]), font=config_font(21))
+        D.rounded_rectangle((373 + i * 373 - int(levlen), 1023, 375 + i * 373, 771), radius=0, outline=None, width=0)
+        D.text((374 + i * 373 - levlen, 1024), '+{}'.format(details["Level"]), font=config_font(21))
         if details['Level'] == 20 and details['rarelity'] == 5:
             c_data = {}
             for a in details["sub"]:
@@ -10344,28 +10336,28 @@ def BuildCardCreater(data):
             SubOP = sub['option']
             SubVal = sub['value']
             if SubOP in ['HP', '攻撃力', '防御力']:
-                D.text((79 + 373 * i, 811 + 50 * a), optionmap.get(SubOP) or SubOP, font=config_font(25), fill=(255,255,255,190))
+                D.text((79 + 373 * i, 1109 + 50 * a), optionmap.get(SubOP) or SubOP, font=config_font(25), fill=(255,255,255,190))
             else:
-                D.text((79 + 373 * i, 811 + 50 * a), optionmap.get(SubOP) or SubOP, font=config_font(25))
+                D.text((79 + 373 * i, 1109 + 50 * a), optionmap.get(SubOP) or SubOP, font=config_font(25))
             SubIcon = Image.open(BytesIO(Artifactemotes(SubOP))).resize((30, 30))
             SubMask = SubIcon.copy()
-            Base.paste(SubIcon, (44 + 373 * i, 811 + 50 * a), mask=SubMask)
+            Base.paste(SubIcon, (44 + 373 * i, 1109 + 50 * a), mask=SubMask)
             if SubOP in disper:
                 SubSize = D.textlength('{}%'.format(float(SubVal)), config_font(25))
-                D.text((375 + i * 373 - SubSize, 811 + 50 * a), '{}%'.format(float(SubVal)), font=config_font(25))
+                D.text((375 + i * 373 - SubSize, 1109 + 50 * a), '{}%'.format(float(SubVal)), font=config_font(25))
             else:
                 SubSize = D.textlength(format(SubVal,","), config_font(25))
                 if SubOP in ['防御力','攻撃力','HP']:
-                    D.text((375 + i * 373 - SubSize, 811 + 50 * a),format(SubVal,","), font=config_font(25), fill=(255, 255, 255, 190))
+                    D.text((375 + i * 373 - SubSize, 1109 + 50 * a),format(SubVal,","), font=config_font(25), fill=(255, 255, 255, 190))
                 else:
-                    D.text((375 + i * 373 - SubSize, 811 + 50 * a),format(SubVal,","), font=config_font(25), fill=(255, 255, 255))
+                    D.text((375 + i * 373 - SubSize, 1109 + 50 * a),format(SubVal,","), font=config_font(25), fill=(255, 255, 255))
             if details['Level'] == 20 and details['rarelity'] == 5:
                 nobi = D.textlength("+".join(map(str,psb[a])), font=config_font(11))
-                D.text((375 + i * 373 - nobi, 840 + 50 * a), "+".join(map(str,psb[a])), fill=(255, 255, 255, 160), font=config_font(11))
+                D.text((375 + i * 373 - nobi, 1142 + 50 * a), "+".join(map(str,psb[a])), fill=(255, 255, 255, 160), font=config_font(11))
         Score = float(ScoreData[parts])
         ATFScorelen = D.textlength(str(Score),config_font(36))
-        D.text((380 + i * 373 - ATFScorelen, 1016), str(Score), font=config_font(36))
-        D.text((295 + i * 373 - ATFScorelen, 1025),'Score', font=config_font(27), fill=(160,160,160))
+        D.text((298 + i * 373 - ATFScorelen, 1350), str(Score), font=config_font(36))
+        D.text((211 + i * 373 - ATFScorelen, 1351),'Score', font=config_font(27), fill=(160,160,160))
         PointRefer = {
             "total": {
                 "SS": 220,
@@ -10398,6 +10390,7 @@ def BuildCardCreater(data):
                 "A": 30
             }
         }
+
         if Score >= PointRefer[parts]['SS']:
             ScoreImage = Image.open(BytesIO(ArtifactGrades('SS')))
         elif Score >= PointRefer[parts]['S']:
@@ -10409,19 +10402,17 @@ def BuildCardCreater(data):
 
         ScoreImage = ScoreImage.resize((ScoreImage.width // 11, ScoreImage.height // 11))
         SCMask = ScoreImage.copy()
-
-        Base.paste(ScoreImage, (85 + 373 * i, 1013), mask=SCMask)
-
+        Base.paste(ScoreImage, (60 + 373 * i, 1352), mask=SCMask)
     SetBounus = Counter([x for x in atftype if atftype.count(x) >= 2])
     for i, (n, q) in enumerate(SetBounus.items()):
         if len(SetBounus) == 2:
-            D.text((1536, 243 + i * 35), n, fill=(0, 255, 0), font=config_font(23))
-            D.rounded_rectangle((1818, 243 + i * 35, 1862, 266 + i * 35), 1, width=0)
-            D.text((1835, 243 + i * 35), str(q), font=config_font(19))
+            D.text((1300, 810 + i * 35), n, fill=(0, 255, 0), font=config_font(23))
+            D.rounded_rectangle((1818, 810 + i * 35, 1862, 266 + i * 35), 1, width=0)
+            D.text((1605, 810 + i * 35), str(q), font=config_font(19))
         if len(SetBounus) == 1:
-            D.text((1536, 263), n, fill=(0, 255, 0), font=config_font(23))
+            D.text((1300, 828), n, fill=(0, 255, 0), font=config_font(23))
             D.rounded_rectangle((1818, 263, 1862, 288), 1, width=0)
-            D.text((1831, 265), str(q), font=config_font(19))
+            D.text((1605, 830), str(q), font=config_font(19))
     os.makedirs(os.path.join(os.getcwd(), 'ArtifacterImageOutput'), exist_ok=True)
     Base.save(os.path.join(os.getcwd(), 'ArtifacterImageOutput', 'output.png'))
 
