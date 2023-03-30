@@ -10331,7 +10331,7 @@ class Ui_ArtifacterImageGenerator(object):
         self.Create.setText("作成")
 
     def OpenImageSetPath(self):
-        self.SetImage, _ = QFileDialog.getOpenFileName(None, '画像の選択(PNGのみ)', dir='./', filter='Images (*.png)')
+        self.SetImage, _ = QFileDialog.getOpenFileName(None, '画像の選択', dir=os.path.expanduser('~'), filter='Images (*.png *.jpg *.jpeg)')
 
     def SpeedyStartup(self):
         threading.Thread(target=self.CheckUID, daemon=True).start()
@@ -10466,7 +10466,7 @@ class Ui_ArtifacterImageGenerator(object):
         self._print('キャラクターイメージをトリミング中...')
         self.ArtifacterprogressBar.setValue(min(((self.ArtifacterprogressBar.value() + 3.125) / 100) * 100.0, 100.0))
         if self.SetImage == '':
-            CharacterImage = CharacterImage.crop((289, 0, 1728, 1100))
+            CharacterImage = CharacterImage.crop((550, 150, 1250, 950))
         else:
             CharacterImage = CharacterImage.crop((100, 0, 905, 596))
         self._print('キャラクターイメージをリサイズ中...')
@@ -10479,9 +10479,14 @@ class Ui_ArtifacterImageGenerator(object):
         self._print('キャラクターイメージにマスクを適用してベース画像へ合成中...')
         self.ArtifacterprogressBar.setValue(min(((self.ArtifacterprogressBar.value() + 3.125) / 100) * 100.0, 100.0))
         if self.SetImage == '':
-            CharacterPaste.paste(CharacterImage, (-55, 70), mask=CharacterAvatarMask)
+            CharacterPaste.paste(CharacterImage, (45, 60), mask=CharacterAvatarMask)
         else:
-            CharacterPaste.paste(CharacterImage, (45, 50), mask=CharacterAvatarMask)
+            if int(CharacterImage.width) <= 950 and int(CharacterImage.height) <= 600:
+                CharacterImage.putalpha(242)
+                CharacterPaste.paste(CharacterImage, (135, 30), mask=CharacterAvatarMask)
+            else:
+                CharacterImage.putalpha(242)
+                CharacterPaste.paste(CharacterImage, (45, 30), mask=CharacterAvatarMask)
         Base = Image.alpha_composite(Base, CharacterPaste)
         self._print('武器イメージをEnka.Networkから取得中...')
         self.ArtifacterprogressBar.setValue(min(((self.ArtifacterprogressBar.value() + 3.125) / 100) * 100.0, 100.0))
@@ -10550,13 +10555,13 @@ class Ui_ArtifacterImageGenerator(object):
         D = ImageDraw.Draw(Base)
         self._print('キャラクターの名前を画像へ記入中...')
         self.ArtifacterprogressBar.setValue(min(((self.ArtifacterprogressBar.value() + 3.125) / 100) * 100.0, 100.0))
-        D.text((30, 20), CharacterName, font=config_font(48))
+        D.text((45, 50), CharacterName, font=config_font(48))
         self._print('キャラクターのレベルを画像へ記入中...')
         self.ArtifacterprogressBar.setValue(min(((self.ArtifacterprogressBar.value() + 3.125) / 100) * 100.0, 100.0))
         levellength = D.textlength('Lv.{}'.format(CharacterLevel), font=config_font(25))
         friendshiplength = D.textlength(str(FriendShip), font=config_font(25))
-        D.text((35, 75), 'Lv.{}'.format(CharacterLevel), font=config_font(25))
-        D.rounded_rectangle((35 + levellength + 5, 74, 77 + levellength + friendshiplength, 102), radius=0, outline=None, width=0)
+        D.text((60, 105), 'Lv.{}'.format(CharacterLevel), font=config_font(25))
+        D.rounded_rectangle((60 + levellength + 5, 74, 77 + levellength + friendshiplength, 102), radius=0, outline=None, width=0)
         self._print('キャラクターの好感度イメージを読み込み中...')
         self.ArtifacterprogressBar.setValue(min(((self.ArtifacterprogressBar.value() + 3.125) / 100) * 100.0, 100.0))
         FriendShipIcon = Image.open(BytesIO(ArtifactAssets('Love'))).convert('RGBA')
@@ -10564,8 +10569,8 @@ class Ui_ArtifacterImageGenerator(object):
         Fmask = FriendShipIcon.copy()
         self._print('キャラクターの好感度イメージをベース画像へ合成中...')
         self.ArtifacterprogressBar.setValue(min(((self.ArtifacterprogressBar.value() + 3.125) / 100) * 100.0, 100.0))
-        Base.paste(FriendShipIcon, (42 + int(levellength), 76), mask=Fmask)
-        D.text((73 + levellength, 74), str(FriendShip), font=config_font(25))
+        Base.paste(FriendShipIcon, (74 + int(levellength), 106), mask=Fmask)
+        D.text((103 + levellength, 104), str(FriendShip), font=config_font(25))
         self._print('キャラクターの天賦レベルをベース画像へ合成中...')
         self.ArtifacterprogressBar.setValue(min(((self.ArtifacterprogressBar.value() + 3.125) / 100) * 100.0, 100.0))
         D.text((1033, 114), 'Lv.{}'.format(CharacterTalent["通常"]), font=config_font(17), fill='aqua' if CharacterTalent["通常"] >= 10 else None)
