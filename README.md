@@ -18,6 +18,9 @@
 	<li>Windowsなら「%USERPROFILE%\ArtifacterImageOutput\「UID」」</li><br />
 	<li>Linuxなら「$HOME/ArtifacterImageOutput/「UID」/」</li>
 </ul>
+<h2>自由に指定できる画像サイズについて</h2>
+<p>横幅700pxまでの対応となっています。</p>
+
 <h2>作者さん</h2>
 <ul>
 <li><a href="https://twitter.com/hyugo_genshin">Hyugo様</a></li>
