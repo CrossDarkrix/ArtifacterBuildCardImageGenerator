@@ -10161,7 +10161,7 @@ def BuildCardCreater(data):
     CharacterImage = CharacterImage.resize((905, 596))
     CharacterAvatarMask = CharacterImage.copy()
     CharacterPaste = Image.new('RGBA', Base.size, (255, 255, 255, 0))
-    CharacterPaste.paste(CharacterImage, (45, 60), mask=CharacterAvatarMask)
+    CharacterPaste.paste(CharacterImage, (52, 38), mask=CharacterAvatarMask)
     Base = Image.alpha_composite(Base, CharacterPaste)
     Weapon = Image.open(BytesIO(urllib.request.urlopen(urllib.request.Request('https://enka.network/ui/{}'.format(WeaponIconFileName), headers={'User-Agent': UsrAgn})).read())).convert('RGBA').resize((128, 128))
     WeaponPaste = Image.new('RGBA', Base.size, (255, 255, 255, 0))
