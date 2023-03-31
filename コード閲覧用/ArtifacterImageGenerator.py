@@ -10296,8 +10296,6 @@ def BuildCardCreater(data):
         Preview = enhancer.enhance(0.6)
         Preview= Preview.resize((int(Preview.width*1.3), int(Preview.height*1.3)))
         Pmask1 = Preview.copy()
-        Pmask = Image.open(BytesIO(ArtifactAssets('ArtifactMask'))).convert('L').resize(Preview.size)
-        Preview.putalpha(Pmask)
         if parts in ['flower']:
             concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(PreviewPaste.paste, Preview, (50 + 420 * i, 896), mask=Pmask1)
         elif parts in ['wing']:
