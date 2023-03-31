@@ -10438,6 +10438,6 @@ def main():
                 print(text.format(index + 1, state))
             state_index = input("スコアの算出ステータスに対応する数値を入力してください：")
             score_state = SCORE_STATE_LIST[int(state_index) - 1]
-            concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999999999).submit(BuildCardCreater, json.loads(CharacterInfoExtractor(UID, data, score_state)))
+            BuildCardCreater(json.loads(CharacterInfoExtractor(UID, data, score_state)))
 if __name__ == '__main__':
     main()
