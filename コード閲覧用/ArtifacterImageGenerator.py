@@ -10186,7 +10186,7 @@ def BuildCardCreater(data):
         TalentMask = Talent.copy()
         TalentPaste.paste(Talent, (TalentPaste.width // 2 - 25, TalentPaste.height // 2 - 25), mask=TalentMask)
         TalentObject = Image.alpha_composite(TalentBase, TalentPaste)
-        TalentBasePaste.paste(TalentObject, (1005, 25 + i * 105))
+        TalentBasePaste.paste(TalentObject, (1005, 45 + i * 105))
     Base = Image.alpha_composite(Base, TalentBasePaste)
     CBase = Image.open(BytesIO(ArtifactConstellation(element))).resize((90, 90)).convert('RGBA')
     Clock = Image.open(BytesIO(ArtifactConstellation('{}LOCK'.format(element)))).convert('RGBA')
@@ -10194,14 +10194,14 @@ def BuildCardCreater(data):
     CPaste = Image.new('RGBA', Base.size, (255, 255, 255, 0))
     for c, t in enumerate(CharacterTalentIcons):
         if c > int(CharacterConstellations):
-            CPaste.paste(Clock, (1016, 247 + (c +1) * 93), mask=ClockMask)
+            CPaste.paste(Clock, (1016, 225 + (c +1) * 93), mask=ClockMask)
         else:
             CharaC = Image.open(BytesIO(urllib.request.urlopen(urllib.request.Request('https://enka.network/ui/{}'.format(t), headers={'User-Agent': UsrAgn})).read())).convert('RGBA').resize((45, 45))
             CharaCPaste = Image.new('RGBA', CBase.size, (255, 255, 255, 0))
             CharaCMask = CharaC.copy()
             CharaCPaste.paste(CharaC, (int(CharaCPaste.width / 2) - 25, int(CharaCPaste.height / 2) - 23), mask=CharaCMask)
             Cobject = Image.alpha_composite(CBase, CharaCPaste)
-            CPaste.paste(Cobject, (1010, 247 + (c + 1) * 93))
+            CPaste.paste(Cobject, (1010, 225 + (c + 1) * 93))
     Base = Image.alpha_composite(Base, CPaste)
     D = ImageDraw.Draw(Base)
     D.text((30, 20), CharacterName, font=config_font(48))
@@ -10214,9 +10214,9 @@ def BuildCardCreater(data):
     Fmask = FriendShipIcon.copy()
     Base.paste(FriendShipIcon, (42 + int(levellength), 76), mask=Fmask)
     D.text((73 + levellength, 74), str(FriendShip), font=config_font(25))
-    D.text((1033, 114), 'Lv.{}'.format(CharacterTalent["通常"]), font=config_font(17), fill='aqua' if CharacterTalent["通常"] >= 10 else None)
-    D.text((1033, 214), 'Lv.{}'.format(CharacterTalent["スキル"]), font=config_font(17), fill='aqua' if CharacterTalent["スキル"] >= 10 else None)
-    D.text((1033, 314), 'Lv.{}'.format(CharacterTalent["爆発"]), font=config_font(17), fill='aqua' if CharacterTalent["爆発"] >= 10 else None)
+    D.text((1033, 124), 'Lv.{}'.format(CharacterTalent["通常"]), font=config_font(17), fill='aqua' if CharacterTalent["通常"] >= 10 else None)
+    D.text((1033, 206), 'Lv.{}'.format(CharacterTalent["スキル"]), font=config_font(17), fill='aqua' if CharacterTalent["スキル"] >= 10 else None)
+    D.text((1033, 294), 'Lv.{}'.format(CharacterTalent["爆発"]), font=config_font(17), fill='aqua' if CharacterTalent["爆発"] >= 10 else None)
     def genbasetext(state):
         sumv = CharacterStatus[state]
         plusv = sumv - CharacterBase[state]
@@ -10299,11 +10299,15 @@ def BuildCardCreater(data):
         Pmask = Image.open(BytesIO(ArtifactAssets('ArtifactMask'))).convert('L').resize(Preview.size)
         Preview.putalpha(Pmask)
         if parts in ['flower']:
-            PreviewPaste.paste(Preview, (-23 + 380 * i, 856), mask=Pmask1)
-        elif parts in ['wing', 'cup']:
-            PreviewPaste.paste(Preview, (-30 + 380 * i, 856), mask=Pmask1)
+            concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(PreviewPaste.paste, Preview, (-23 + 380 * i, 856), mask=Pmask1)
+        elif parts in ['wing']:
+            concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(PreviewPaste.paste, Preview, (-30 + 380 * i, 856), mask=Pmask1)
+        elif parts in ['cup']:
+            concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(PreviewPaste.paste, Preview, (-38 + 380 * i, 856), mask=Pmask1)
+        elif parts in ['crown']:
+            concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(PreviewPaste.paste, Preview, (-46 + 380 * i, 856), mask=Pmask1)
         else:
-            PreviewPaste.paste(Preview, (-38 + 380 * i, 856), mask=Pmask1)
+            concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(PreviewPaste.paste, Preview, (-37 + 380 * i, 856), mask=Pmask1)
         Base = Image.alpha_composite(Base, PreviewPaste)
         D = ImageDraw.Draw(Base)
         mainop = details['main']['option']
@@ -10406,13 +10410,11 @@ def BuildCardCreater(data):
     SetBounus = Counter([x for x in atftype if atftype.count(x) >= 2])
     for i, (n, q) in enumerate(SetBounus.items()):
         if len(SetBounus) == 2:
-            D.text((1300, 810 + i * 35), n, fill=(0, 255, 0), font=config_font(23))
-            D.rounded_rectangle((1818, 810 + i * 35, 1862, 266 + i * 35), 1, width=0)
-            D.text((1605, 810 + i * 35), str(q), font=config_font(19))
+            concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(D.text, (1300, 810 + i * 35), n, fill=(0, 255, 0), font=config_font(23))
+            concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(D.text, (1605, 807 + i * 35), str(q), font=config_font(30))
         if len(SetBounus) == 1:
-            D.text((1300, 828), n, fill=(0, 255, 0), font=config_font(23))
-            D.rounded_rectangle((1818, 263, 1862, 288), 1, width=0)
-            D.text((1605, 830), str(q), font=config_font(19))
+            concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(D.text, (1300, 828), n, fill=(0, 255, 0), font=config_font(23))
+            concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(D.text, (1605, 827), str(q), font=config_font(30))
     os.makedirs(os.path.join(os.getcwd(), 'ArtifacterImageOutput'), exist_ok=True)
     Base.save(os.path.join(os.getcwd(), 'ArtifacterImageOutput', 'output.png'))
 

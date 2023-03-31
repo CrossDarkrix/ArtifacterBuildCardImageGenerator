@@ -10284,7 +10284,7 @@ class Ui_ArtifacterImageGenerator(object):
         self.VersionLabel.setFont(font6)
         self.VersionLabel.setStyleSheet(u"QLabel{background: #1a1a1a;}")
         self.VersionLabel.setAlignment(Qt.AlignCenter)
-        self.VersionLabel.setText('v1.3.0')
+        self.VersionLabel.setText('v1.3.1')
         self.SelectImage = QPushButton(ArtifacterImageGenerator)
         self.SelectImage.setObjectName(u"SelectImage")
         self.SelectImage.setGeometry(QRect(670, 120, 51, 51))
@@ -10465,6 +10465,13 @@ class Ui_ArtifacterImageGenerator(object):
                 CharacterImage = Image.open(BytesIO(urllib.request.urlopen(urllib.request.Request('https://enka.network/ui/{}'.format(CharacterIconFileName), headers={'User-Agent': UsrAgn})).read())).convert('RGBA')
         else:
             CharacterImage = Image.open(self.SetImage).convert('RGBA')
+            if 700 <= CharacterImage.width:
+                if 700 <= CharacterImage.height:
+                    CharacterImage = CharacterImage.crop((0, 0, 700, 700))
+                else:
+                    CharacterImage = CharacterImage.crop((0, 0, 700, 700))
+            elif 700 <= CharacterImage.height:
+                CharacterImage = CharacterImage.crop((0, 0, 700, 700))
         self._print('キャラクターイメージの背景の影を読み込み中...')
         self.ArtifacterprogressBar.setValue(min(((self.ArtifacterprogressBar.value() + 3.125) / 100) * 100.0, 100.0))
         self._print('キャラクターイメージをトリミング中...')
@@ -10487,10 +10494,10 @@ class Ui_ArtifacterImageGenerator(object):
         else:
             if int(CharacterImage.width) <= 950 and int(CharacterImage.height) <= 600:
                 CharacterImage.putalpha(242)
-                CharacterPaste.paste(CharacterImage, (135, 30), mask=CharacterAvatarMask)
+                CharacterPaste.paste(CharacterImage, (155, 60), mask=CharacterAvatarMask)
             else:
                 CharacterImage.putalpha(242)
-                CharacterPaste.paste(CharacterImage, (45, 30), mask=CharacterAvatarMask)
+                CharacterPaste.paste(CharacterImage, (75, 60), mask=CharacterAvatarMask)
         Base = Image.alpha_composite(Base, CharacterPaste)
         self._print('武器イメージをEnka.Networkから取得中...')
         self.ArtifacterprogressBar.setValue(min(((self.ArtifacterprogressBar.value() + 3.125) / 100) * 100.0, 100.0))
@@ -10604,14 +10611,14 @@ class Ui_ArtifacterImageGenerator(object):
                 D = ImageDraw.Draw(Base)
             if k not in disper:
                 statelen = D.textlength(format(v, ","), config_font(40))
-                D.text((1780 - statelen, 286 + i * 61), format(v, ","), font=config_font(40))
+                D.text((1830 - statelen, 286 + i * 61), format(v, ","), font=config_font(40))
             else:
                 statelen = D.textlength(f'{float(v)}%', config_font(40))
-                D.text((1780 - statelen, 286 + i * 61), f'{float(v)}%', font=config_font(40))
+                D.text((1830 - statelen, 286 + i * 61), f'{float(v)}%', font=config_font(40))
             if k in ['HP', '防御力', '攻撃力']:
                 HPpls, HPbase, HPsize, HPbsize = genbasetext(k)
-                D.text((1780 - HPsize, 335 + i * 60), HPpls, fill=(0,255,0,180), font=config_font(12))
-                D.text((1780 - HPsize - HPbsize, 335 + i * 60), HPbase, font=config_font(12), fill=(255, 255, 255, 180))
+                D.text((1830 - HPsize, 335 + i * 59), HPpls, fill=(0,255,0,180), font=config_font(12))
+                D.text((1830 - HPsize - HPbsize, 335 + i * 59), HPbase, font=config_font(12), fill=(255, 255, 255, 180))
         D.text((1390, 47), WeaponName, font=config_font(30))
         wlebellen = D.textlength(f'Lv.{WeaponLevel}', font=config_font(24))
         D.rounded_rectangle((1582, 80, 1582 + wlebellen + 4, 108), radius=0, outline=None, width=0)
@@ -10634,7 +10641,7 @@ class Ui_ArtifacterImageGenerator(object):
         D.rounded_rectangle((1430, 45, 1470, 70), radius=0, outline=None, width=0)
         D.text((1180, 46), f'R{WeaponRank}', font=config_font(24))
         ScoreLen = D.textlength(f'{ScoreTotal}', config_font(100))
-        D.text((440 - ScoreLen // 2, 723), str(ScoreTotal), font=config_font(100))
+        D.text((510 - ScoreLen // 2, 715), str(ScoreTotal), font=config_font(110))
         self._print('ステータスの計算方式を記入中...')
         self.ArtifacterprogressBar.setValue(min(((self.ArtifacterprogressBar.value() + 3.125) / 100) * 100.0, 100.0))
         blen = D.textlength('{}換算'.format(ScoreCVBasis), font=config_font(24))
@@ -10674,10 +10681,14 @@ class Ui_ArtifacterImageGenerator(object):
             concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(Preview.putalpha, Pmask)
             if parts in ['flower']:
                 concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(PreviewPaste.paste, Preview, (-23 + 380 * i, 856), mask=Pmask1)
-            elif parts in ['wing', 'cup']:
+            elif parts in ['wing']:
                 concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(PreviewPaste.paste, Preview, (-30 + 380 * i, 856), mask=Pmask1)
-            else:
+            elif parts in ['cup']:
                 concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(PreviewPaste.paste, Preview, (-38 + 380 * i, 856), mask=Pmask1)
+            elif parts in ['crown']:
+                concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(PreviewPaste.paste, Preview, (-46 + 380 * i, 856), mask=Pmask1)
+            else:
+                concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(PreviewPaste.paste, Preview, (-37 + 380 * i, 856), mask=Pmask1)
             Base = Image.alpha_composite(Base, PreviewPaste)
             D = concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(ImageDraw.Draw, Base).result()
             mainop = details['main']['option']
@@ -10784,12 +10795,10 @@ class Ui_ArtifacterImageGenerator(object):
         for i, (n, q) in enumerate(SetBounus.items()):
             if len(SetBounus) == 2:
                 concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(D.text, (1300, 810 + i * 35), n, fill=(0, 255, 0), font=config_font(23))
-                concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(D.rounded_rectangle, (1818, 810 + i * 35, 1862, 266 + i * 35), 1, width=0)
-                concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(D.text, (1605, 810 + i * 35), str(q), font=config_font(19))
+                concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(D.text, (1605, 807 + i * 35), str(q), font=config_font(30))
             if len(SetBounus) == 1:
                 concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(D.text, (1300, 828), n, fill=(0, 255, 0), font=config_font(23))
-                concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(D.rounded_rectangle, (1818, 263, 1862, 288), 1, width=0)
-                concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(D.text, (1605, 830), str(q), font=config_font(19))
+                concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(D.text, (1605, 827), str(q), font=config_font(30))
         os.makedirs(self.SavePath.text(), exist_ok=True)
         concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(self.Preview.setPixmap, QPixmap(ImageQt.ImageQt(Base)).scaled(440, 250, Qt.KeepAspectRatio, Qt.SmoothTransformation))
         concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(self.SaveCard, Base)
