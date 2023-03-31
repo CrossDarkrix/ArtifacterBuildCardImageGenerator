@@ -10239,14 +10239,14 @@ def BuildCardCreater(data):
             D = ImageDraw.Draw(Base)
         if k not in disper:
             statelen = D.textlength(format(v, ","), config_font(40))
-            D.text((1780 - statelen, 286 + i * 61), format(v, ","), font=config_font(40))
+            D.text((1830 - statelen, 286 + i * 61), format(v, ","), font=config_font(40))
         else:
             statelen = D.textlength(f'{float(v)}%', config_font(40))
-            D.text((1780 - statelen, 286 + i * 61), f'{float(v)}%', font=config_font(40))
+            D.text((1830 - statelen, 286 + i * 61), f'{float(v)}%', font=config_font(40))
         if k in ['HP', '防御力', '攻撃力']:
             HPpls, HPbase, HPsize, HPbsize = genbasetext(k)
-            D.text((1780 - HPsize, 335 + i * 60), HPpls, fill=(0,255,0,180), font=config_font(12))
-            D.text((1780 - HPsize - HPbsize, 335 + i * 60), HPbase, font=config_font(12), fill=(255, 255, 255, 180))
+            D.text((1830 - HPsize, 335 + i * 59), HPpls, fill=(0,255,0,180), font=config_font(12))
+            D.text((1830 - HPsize - HPbsize, 335 + i * 59), HPbase, font=config_font(12), fill=(255, 255, 255, 180))
     D.text((1390, 47), WeaponName, font=config_font(30))
     wlebellen = D.textlength(f'Lv.{WeaponLevel}', font=config_font(24))
     D.rounded_rectangle((1582, 80, 1582 + wlebellen + 4, 108), radius=0, outline=None, width=0)
