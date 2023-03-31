@@ -10456,6 +10456,7 @@ class Ui_ArtifacterImageGenerator(object):
         self._print('ベース画像を読み込み中...')
         self.ArtifacterprogressBar.setValue(min(((self.ArtifacterprogressBar.value() + 3.125) / 100) * 100.0, 100.0))
         Base = Image.open(BytesIO(ArtifactBaseImages(element))).convert('RGBA')
+        CharacterImageMask = Image.open(BytesIO(ArtifactAssets('CharacterMask'))).convert('L')
         self._print('キャラクターイメージをEnka.Networkから取得中...')
         self.ArtifacterprogressBar.setValue(min(((self.ArtifacterprogressBar.value() + 3.125) / 100) * 100.0, 100.0))
         if self.SetImage == '':
@@ -10465,24 +10466,18 @@ class Ui_ArtifacterImageGenerator(object):
                 CharacterImage = Image.open(BytesIO(urllib.request.urlopen(urllib.request.Request('https://enka.network/ui/{}'.format(CharacterIconFileName), headers={'User-Agent': UsrAgn})).read())).convert('RGBA')
         else:
             CharacterImage = Image.open(self.SetImage).convert('RGBA')
-            if 700 <= CharacterImage.width:
-                if 700 <= CharacterImage.height:
-                    CharacterImage = CharacterImage.crop((0, 0, 700, 700))
-                else:
-                    CharacterImage = CharacterImage.crop((0, 0, 700, 700))
-            elif 700 <= CharacterImage.height:
-                CharacterImage = CharacterImage.crop((0, 0, 700, 700))
         self._print('キャラクターイメージの背景の影を読み込み中...')
         self.ArtifacterprogressBar.setValue(min(((self.ArtifacterprogressBar.value() + 3.125) / 100) * 100.0, 100.0))
         self._print('キャラクターイメージをトリミング中...')
         self.ArtifacterprogressBar.setValue(min(((self.ArtifacterprogressBar.value() + 3.125) / 100) * 100.0, 100.0))
         if self.SetImage == '':
             CharacterImage = CharacterImage.crop((550, 150, 1250, 950))
-        else:
-            CharacterImage = CharacterImage.crop((100, 0, 905, 596))
         self._print('キャラクターイメージをリサイズ中...')
         self.ArtifacterprogressBar.setValue(min(((self.ArtifacterprogressBar.value() + 3.125) / 100) * 100.0, 100.0))
-        CharacterImage = CharacterImage.resize((905, 596))
+        if self.SetImage == '':
+            CharacterImage = CharacterImage.resize((905, 596))
+        else:
+            CharacterImage = CharacterImage.resize((970, 650))
         CharacterAvatarMask = CharacterImage.copy()
         self._print('キャラクターイメージのマスクを設定中...')
         self.ArtifacterprogressBar.setValue(min(((self.ArtifacterprogressBar.value() + 3.125) / 100) * 100.0, 100.0))
@@ -10494,10 +10489,12 @@ class Ui_ArtifacterImageGenerator(object):
         else:
             if int(CharacterImage.width) <= 950 and int(CharacterImage.height) <= 600:
                 CharacterImage.putalpha(242)
-                CharacterPaste.paste(CharacterImage, (162, 28), mask=CharacterAvatarMask)
+                CharacterPaste.paste(CharacterImage, (25, 10), mask=CharacterAvatarMask)
+                CharacterPaste.putalpha(CharacterImageMask)
             else:
                 CharacterImage.putalpha(242)
-                CharacterPaste.paste(CharacterImage, (82, 28), mask=CharacterAvatarMask)
+                CharacterPaste.paste(CharacterImage, (25, 10), mask=CharacterAvatarMask)
+                CharacterPaste.putalpha(CharacterImageMask)
         Base = Image.alpha_composite(Base, CharacterPaste)
         self._print('武器イメージをEnka.Networkから取得中...')
         self.ArtifacterprogressBar.setValue(min(((self.ArtifacterprogressBar.value() + 3.125) / 100) * 100.0, 100.0))
