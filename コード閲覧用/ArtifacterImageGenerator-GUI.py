@@ -10477,6 +10477,7 @@ class Ui_ArtifacterImageGenerator(object):
         if self.SetImage == '':
             CharacterImage = CharacterImage.resize((905, 596))
         else:
+            CharacterImage = CharacterImage.resize((int(CharacterImage.width * 0.5), int(CharacterImage.height * 0.5)))
             CharacterImage = CharacterImage.resize((970, 650))
         CharacterAvatarMask = CharacterImage.copy()
         self._print('キャラクターイメージのマスクを設定中...')
@@ -10600,18 +10601,22 @@ class Ui_ArtifacterImageGenerator(object):
                 i = StateOP.index(k)
             except:
                 i = 7
-                D.text((1266, 716), k, font=config_font(40))
+                D.text((1261, 713), k, font=config_font(40))
                 opicon = Image.open(BytesIO(Artifactemotes(k))).resize((45, 45))
                 oppaste = Image.new('RGBA', Base.size, (255, 255, 255, 0))
-                oppaste.paste(opicon, (1202, 716))
+                oppaste.paste(opicon, (1199, 713))
                 Base = Image.alpha_composite(Base, oppaste)
                 D = ImageDraw.Draw(Base)
             if k not in disper:
                 statelen = D.textlength(format(v, ","), config_font(40))
                 D.text((1830 - statelen, 286 + i * 61), format(v, ","), font=config_font(40))
             else:
-                statelen = D.textlength(f'{float(v)}%', config_font(40))
-                D.text((1830 - statelen, 286 + i * 61), f'{float(v)}%', font=config_font(40))
+                if k in ['氷元素ダメージ', '水元素ダメージ', '岩元素ダメージ', '草元素ダメージ', '風元素ダメージ', '炎元素ダメージ', '物理ダメージ', '与える治癒効果', '雷元素ダメージ']:
+                    statelen = D.textlength(f'{float(v)}%', config_font(40))
+                    D.text((1830 - statelen, 271 + i * 63), f'{float(v)}%', font=config_font(40))
+                else:
+                    statelen = D.textlength(f'{float(v)}%', config_font(40))
+                    D.text((1830 - statelen, 270 + i * 62), f'{float(v)}%', font=config_font(40))
             if k in ['HP', '防御力', '攻撃力']:
                 HPpls, HPbase, HPsize, HPbsize = genbasetext(k)
                 D.text((1830 - HPsize, 335 + i * 59), HPpls, fill=(0,255,0,180), font=config_font(12))
@@ -10738,7 +10743,7 @@ class Ui_ArtifacterImageGenerator(object):
             Score = float(ScoreData[parts])
             ATFScorelen = concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(D.textlength, str(Score), config_font(36)).result()
             concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(D.text, (298 + i * 373 - ATFScorelen, 1350), str(Score), font=config_font(36))
-            concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(D.text, (211 + i * 373 - ATFScorelen, 1351), 'Score', font=config_font(27), fill=(160, 160, 160))
+            concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(D.text, (211 + i * 373 - ATFScorelen, 1358), 'Score', font=config_font(27), fill=(160, 160, 160))
             PointRefer = {
                 "total": {
                     "SS": 220,
@@ -10782,7 +10787,7 @@ class Ui_ArtifacterImageGenerator(object):
                 ScoreImage = concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(Image.open, BytesIO(ArtifactGrades('B'))).result()
             ScoreImage = concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(ScoreImage.resize, (ScoreImage.width // 11, ScoreImage.height // 11)).result()
             SCMask = ScoreImage.copy()
-            concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(Base.paste, ScoreImage, (60 + 373 * i, 1352), mask=SCMask)
+            concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(Base.paste, ScoreImage, (75 + 373 * i, 1352), mask=SCMask)
         self._print('ベース画像へ聖遺物のスコアイメージを合成中...')
         self.ArtifacterprogressBar.setValue(min(((self.ArtifacterprogressBar.value() + 3.125) / 100) * 100.0, 100.0))
         SetBounus = concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(Counter, [x for x in atftype if atftype.count(x) >= 2]).result()
@@ -11033,7 +11038,7 @@ class Ui_ArtifacterImageGenerator(object):
                 self.UserName.setText(' ユーザー名: {}'.format(self.PlayerInfo['nickname']))
                 self.UserLevel.setText(' 世界ランク: {}'.format(self.PlayerInfo['level']))
                 self.avatar_list = self.PlayerInfo['showAvatarInfoList']
-                threading.Thread(target=self.TitleImage.setPixmap, daemon=True, args=(QPixmap(ImageQt.ImageQt(concurrent.futures.ThreadPoolExecutor().submit(Image.open, BytesIO(urllib.request.urlopen(urllib.request.Request('https://enka.network/ui/{}'.format('{}.png'.format(StoreCharacter['{}'.format(self.PlayerInfo['profilePicture']['avatarId'])]['SideIconName'].replace('UI_AvatarIcon_Side_', 'UI_AvatarIcon_'))), headers={'User-Agent': UsrAgn})).read())).result())).scaled(90, 90, Qt.KeepAspectRatio, Qt.SmoothTransformation), )).start()
+                concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(self.TitleImage.setPixmap, QPixmap(ImageQt.ImageQt(concurrent.futures.ThreadPoolExecutor().submit(Image.open, BytesIO(urllib.request.urlopen(urllib.request.Request('https://enka.network/ui/{}'.format('{}.png'.format(StoreCharacter['{}'.format(self.PlayerInfo['profilePicture']['avatarId'])]['SideIconName'].replace('UI_AvatarIcon_Side_', 'UI_AvatarIcon_'))), headers={'User-Agent': UsrAgn})).read())).result())).scaled(90, 90, Qt.KeepAspectRatio, Qt.SmoothTransformation))
                 mini_jp1 = ('ぁ', 'ぃ', 'ぅ', 'ぇ', 'ぉ', 'っ', 'ゃ', 'ゅ', 'ょ')
                 mini_jp2 = ('ァ', 'ィ', 'ゥ', 'ェ', 'ォ', 'ッ', 'ャ', 'ュ', 'ョ') # 
                 for index, avatar in enumerate(self.avatar_list):
@@ -11056,7 +11061,7 @@ class Ui_ArtifacterImageGenerator(object):
                         Name = '{} \t\t'.format(avatar['name'])
                     text = QStandardItem('{}Lv{}'.format(Name, avatar['level']))
                     self.ArtifacterModel.appendRow(text)
-                    threading.Thread(target=text.setData, daemon=True, args=(concurrent.futures.ThreadPoolExecutor().submit(QIcon, QPixmap(ImageQt.ImageQt(concurrent.futures.ThreadPoolExecutor().submit(Image.open, BytesIO(urllib.request.urlopen(urllib.request.Request('https://enka.network/ui/{}'.format('{}.png'.format(StoreCharacter['{}'.format(avatar['avatarId'])]['SideIconName'].replace('UI_AvatarIcon_Side_', 'UI_AvatarIcon_'))), headers={'User-Agent': UsrAgn})).read())).result())).scaled(128, 128, Qt.KeepAspectRatio, Qt.SmoothTransformation)).result(), Qt.DecorationRole, )).start()
+                    concurrent.futures.ThreadPoolExecutor().submit(text.setData, concurrent.futures.ThreadPoolExecutor().submit(QIcon, QPixmap(ImageQt.ImageQt(concurrent.futures.ThreadPoolExecutor().submit(Image.open, BytesIO(urllib.request.urlopen(urllib.request.Request('https://enka.network/ui/{}'.format('{}.png'.format(StoreCharacter['{}'.format(avatar['avatarId'])]['SideIconName'].replace('UI_AvatarIcon_Side_', 'UI_AvatarIcon_'))), headers={'User-Agent': UsrAgn})).read())).result())).scaled(128, 128, Qt.KeepAspectRatio, Qt.SmoothTransformation)).result(), Qt.DecorationRole)
                 self.Artifacterlist.setModel(self.ArtifacterModel)
                 self._print('待機中...')
 

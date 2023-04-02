@@ -10231,18 +10231,22 @@ def BuildCardCreater(data):
             i = StateOP.index(k)
         except:
             i = 7
-            D.text((1266, 716), k, font=config_font(40))
+            D.text((1261, 713), k, font=config_font(40))
             opicon = Image.open(BytesIO(Artifactemotes(k))).resize((40, 40))
             oppaste = Image.new('RGBA', Base.size, (255, 255, 255, 0))
-            oppaste.paste(opicon, (1202, 716))
+            oppaste.paste(opicon, (1199, 713))
             Base = Image.alpha_composite(Base, oppaste)
             D = ImageDraw.Draw(Base)
         if k not in disper:
             statelen = D.textlength(format(v, ","), config_font(40))
             D.text((1830 - statelen, 286 + i * 61), format(v, ","), font=config_font(40))
         else:
-            statelen = D.textlength(f'{float(v)}%', config_font(40))
-            D.text((1830 - statelen, 286 + i * 61), f'{float(v)}%', font=config_font(40))
+            if k in ['氷元素ダメージ', '水元素ダメージ', '岩元素ダメージ', '草元素ダメージ', '風元素ダメージ', '炎元素ダメージ', '物理ダメージ', '与える治癒効果', '雷元素ダメージ']:
+                statelen = D.textlength(f'{float(v)}%', config_font(40))
+                D.text((1830 - statelen, 271 + i * 63), f'{float(v)}%', font=config_font(40))
+            else:
+                statelen = D.textlength(f'{float(v)}%', config_font(40))
+                D.text((1830 - statelen, 270 + i * 62), f'{float(v)}%', font=config_font(40))
         if k in ['HP', '防御力', '攻撃力']:
             HPpls, HPbase, HPsize, HPbsize = genbasetext(k)
             D.text((1830 - HPsize, 335 + i * 59), HPpls, fill=(0,255,0,180), font=config_font(12))
@@ -10359,7 +10363,7 @@ def BuildCardCreater(data):
         Score = float(ScoreData[parts])
         ATFScorelen = D.textlength(str(Score),config_font(36))
         D.text((298 + i * 373 - ATFScorelen, 1350), str(Score), font=config_font(36))
-        D.text((211 + i * 373 - ATFScorelen, 1351),'Score', font=config_font(27), fill=(160,160,160))
+        D.text((211 + i * 373 - ATFScorelen, 1358),'Score', font=config_font(27), fill=(160,160,160))
         PointRefer = {
             "total": {
                 "SS": 220,
@@ -10404,7 +10408,7 @@ def BuildCardCreater(data):
 
         ScoreImage = ScoreImage.resize((ScoreImage.width // 11, ScoreImage.height // 11))
         SCMask = ScoreImage.copy()
-        Base.paste(ScoreImage, (60 + 373 * i, 1352), mask=SCMask)
+        Base.paste(ScoreImage, (75 + 373 * i, 1352), mask=SCMask)
     SetBounus = Counter([x for x in atftype if atftype.count(x) >= 2])
     for i, (n, q) in enumerate(SetBounus.items()):
         if len(SetBounus) == 2:
