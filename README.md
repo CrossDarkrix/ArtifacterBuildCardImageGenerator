@@ -12,6 +12,7 @@
 <h2>ScreenShot</h2>
 
 <a href="https://github.com/CrossDarkrix/ArtifacterBuildCardImageGenerator"><img src="https://raw.githubusercontent.com/CrossDarkrix/ArtifacterBuildCardImageGenerator/master/Images/Screenshots/image0.jpg" width="400px" height="350px"></a>
+<a href="https://github.com/CrossDarkrix/ArtifacterBuildCardImageGenerator"><img src="https://raw.githubusercontent.com/CrossDarkrix/ArtifacterBuildCardImageGenerator/master/Images/Screenshots/image2.jpg" width="400px" height="350px"></a>
 
 <h2>GUI版の画像出力先</h2>
 <ul>
