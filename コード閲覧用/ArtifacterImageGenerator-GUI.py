@@ -10742,7 +10742,7 @@ class Ui_ArtifacterImageGenerator(object):
         CharacterBlurMask = CharacterBlur.copy()
         CharacterBlurPaste = Image.new('RGBA', Base.size, (255, 255, 255, 0))
         CharacterBlur.putalpha(56)
-        CharacterBlurPaste.paste(CharacterBlur, (33, 42))
+        CharacterBlurPaste.paste(CharacterBlur, (56, 105))
         CharacterPaste = Image.alpha_composite(CharacterPaste, CharacterBlurPaste)
         Base = Image.alpha_composite(Base, CharacterPaste)
         self._print('武器イメージをEnka.Networkから取得中...')
@@ -10826,8 +10826,8 @@ class Ui_ArtifacterImageGenerator(object):
         Fmask = FriendShipIcon.copy()
         self._print('キャラクターの好感度イメージをベース画像へ合成中...')
         self.ArtifacterprogressBar.setValue(min(((self.ArtifacterprogressBar.value() + 3.125) / 100) * 100.0, 100.0))
-        Base.paste(FriendShipIcon, (74 + int(levellength), 106), mask=Fmask)
-        D.text((103 + levellength, 104), str(FriendShip), font=config_font(25))
+        Base.paste(FriendShipIcon, (74 + int(levellength), 108), mask=Fmask)
+        D.text((103 + levellength, 106), str(FriendShip), font=config_font(25))
         self._print('キャラクターの天賦レベルをベース画像へ合成中...')
         self.ArtifacterprogressBar.setValue(min(((self.ArtifacterprogressBar.value() + 3.125) / 100) * 100.0, 100.0))
         D.text((1033, 86), 'Lv.{}'.format(CharacterTalent["通常"]), font=config_font(17), fill='aqua' if CharacterTalent["通常"] >= 10 else None)
@@ -10926,14 +10926,15 @@ class Ui_ArtifacterImageGenerator(object):
             enhancer = concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(ImageEnhance.Brightness, Preview).result()
             Preview = enhancer.enhance(0.6)
             Pmask1 = Preview.copy()
+            Preview.putalpha(204)
             if parts in ['flower']:
-                concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(PreviewPaste.paste, Preview, (50 + 420 * i, 896), mask=Pmask1)
+                concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(PreviewPaste.paste, Preview, (50 + 420 * i, 906), mask=Pmask1)
             elif parts in ['wing']:
-                concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(PreviewPaste.paste, Preview, (-12 + 420 * i, 886), mask=Pmask1)
+                concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(PreviewPaste.paste, Preview, (-12 + 420 * i, 906), mask=Pmask1)
             elif parts in ['cup']:
-                concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(PreviewPaste.paste, Preview, (-105 + 420 * i, 876), mask=Pmask1)
+                concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(PreviewPaste.paste, Preview, (-105 + 420 * i, 896), mask=Pmask1)
             elif parts in ['crown']:
-                concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(PreviewPaste.paste, Preview, (-140 + 420 * i, 896), mask=Pmask1)
+                concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(PreviewPaste.paste, Preview, (-140 + 420 * i, 906), mask=Pmask1)
             else:
                 concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(PreviewPaste.paste, Preview, (-35 + 420 * i, 916), mask=Pmask1)
             Base = Image.alpha_composite(Base, PreviewPaste)
