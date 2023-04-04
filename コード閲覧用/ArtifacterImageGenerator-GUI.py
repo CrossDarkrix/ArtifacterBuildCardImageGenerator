@@ -10303,7 +10303,7 @@ class Ui_ArtifacterImageGenerator(object):
         self.VersionLabel.setFont(font6)
         self.VersionLabel.setStyleSheet(u"QLabel{background: #1a1a1a;}")
         self.VersionLabel.setAlignment(Qt.AlignCenter)
-        self.VersionLabel.setText('v1.3.5')
+        self.VersionLabel.setText('v1.3.6')
         self.SelectImage = QPushButton(ArtifacterImageGenerator)
         self.SelectImage.setObjectName(u"SelectImage")
         self.SelectImage.setGeometry(QRect(895, 645, 51, 51))
@@ -10717,7 +10717,7 @@ class Ui_ArtifacterImageGenerator(object):
         self._print('キャラクターイメージをリサイズ中...')
         self.ArtifacterprogressBar.setValue(min(((self.ArtifacterprogressBar.value() + 3.125) / 100) * 100.0, 100.0))
         if self.SetImage == '':
-            CharacterImage = CharacterImage.resize((905, 596))
+            CharacterImage = CharacterImage.resize((925, 620))
         else:
             CharacterImage = CharacterImage.resize((int(CharacterImage.width * 0.5), int(CharacterImage.height * 0.5)))
             CharacterImage = CharacterImage.resize((970, 650))
@@ -10728,7 +10728,7 @@ class Ui_ArtifacterImageGenerator(object):
         self._print('キャラクターイメージにマスクを適用してベース画像へ合成中...')
         self.ArtifacterprogressBar.setValue(min(((self.ArtifacterprogressBar.value() + 3.125) / 100) * 100.0, 100.0))
         if self.SetImage == '':
-            CharacterPaste.paste(CharacterImage, (52, 38), mask=CharacterAvatarMask)
+            CharacterPaste.paste(CharacterImage, (33, 12), mask=CharacterAvatarMask)
         else:
             if int(CharacterImage.width) <= 950 and int(CharacterImage.height) <= 600:
                 CharacterImage.putalpha(242)
@@ -10738,6 +10738,12 @@ class Ui_ArtifacterImageGenerator(object):
                 CharacterImage.putalpha(242)
                 CharacterPaste.paste(CharacterImage, (25, 10), mask=CharacterAvatarMask)
                 CharacterPaste.putalpha(CharacterImageMask)
+        CharacterBlur = Image.open(BytesIO(ArtifactAssets('CharacterBlur'))).convert('RGBA')
+        CharacterBlurMask = CharacterBlur.copy()
+        CharacterBlurPaste = Image.new('RGBA', Base.size, (255, 255, 255, 0))
+        CharacterBlur.putalpha(56)
+        CharacterBlurPaste.paste(CharacterBlur, (33, 42))
+        CharacterPaste = Image.alpha_composite(CharacterPaste, CharacterBlurPaste)
         Base = Image.alpha_composite(Base, CharacterPaste)
         self._print('武器イメージをEnka.Networkから取得中...')
         self.ArtifacterprogressBar.setValue(min(((self.ArtifacterprogressBar.value() + 3.125) / 100) * 100.0, 100.0))
