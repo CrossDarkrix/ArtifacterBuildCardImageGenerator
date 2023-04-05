@@ -11111,6 +11111,7 @@ class Ui_ArtifacterImageGenerator(object):
         self._print('完了!　出力先は「{}」です。'.format(os.path.join(self.SavePath.text(), self.SaveFile.text())))
         ClickCount[0] = '0'
         self.SetImage = ''
+        ImageFileCropped[0] = None
 
     def SaveCard(self, Base):
         Base.save(os.path.join(self.SavePath.text(), self.SaveFile.text()))
