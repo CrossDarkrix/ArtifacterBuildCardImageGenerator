@@ -10568,7 +10568,7 @@ class Ui_ArtifacterImageGenerator(object):
             return '0'
 
     def ChangeMode(self):
-        if self.DetectionDarkMode() == '1': # ライトモード
+        if concurrent.futures.ThreadPoolExecutor(os.cpu_count() * 9999).submit(self.DetectionDarkMode).result() == '1': # ライトモード
             DarkModeOn[0] = '0'
             self.SetColor = '0'
             self.CropImage.setStyleSheet(u"QPushButton:checked{background: #3d3d3d;} QPushButton{color: #2e2e2d;background: #f6f6f6;}")
