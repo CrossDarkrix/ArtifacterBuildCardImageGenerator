@@ -10166,6 +10166,7 @@ class Ui_ArtifacterImageGenerator(object):
         self.Artifacterlist.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.Artifacterlist.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         self.Artifacterlist.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.Artifacterlist.setHorizontalScrollMode(QAbstractItemView.ScrollPerPixel)
         self.ArtifacterModel = QStandardItemModel(ArtifacterImageGenerator)
         self.CheckGroups = QButtonGroup(ArtifacterImageGenerator)
         self.Check_HP = QCheckBox(ArtifacterImageGenerator)
@@ -10343,7 +10344,7 @@ class Ui_ArtifacterImageGenerator(object):
         self.VersionLabel.setFont(font6)
         self.VersionLabel.setStyleSheet(u"QLabel{background: #1a1a1a;}")
         self.VersionLabel.setAlignment(Qt.AlignCenter)
-        self.VersionLabel.setText('v1.3.7')
+        self.VersionLabel.setText('v1.3.8')
         self.SelectImage = QPushButton(ArtifacterImageGenerator)
         self.SelectImage.setObjectName(u"SelectImage")
         self.SelectImage.setGeometry(QRect(805, 645, 51, 51))
@@ -10564,7 +10565,8 @@ class Ui_ArtifacterImageGenerator(object):
         self.SetImage, _ = QFileDialog.getOpenFileName(None, '画像の選択', dir=os.path.expanduser('~'), filter='Images (*.png *.jpg *.jpeg)')
 
     def SpeedyStartup(self):
-        threading.Thread(target=self.CheckUID, daemon=True).start()
+        concurrent.futures.ThreadPoolExecutor().submit(self.CheckUID).result()
+        concurrent.futures.ThreadPoolExecutor().submit(self.Artifacterlist.show)
 
     def OpenToPath(self):
         os.makedirs(self.SavePath.text(), exist_ok=True)
@@ -11281,21 +11283,21 @@ class Ui_ArtifacterImageGenerator(object):
                 for index, avatar in enumerate(self.avatar_list):
                     if 3 <= len(avatar['name']):
                         if 'ー' == avatar['name'][-1]:
-                            Name = '{} \t\t'.format(avatar['name'])
+                            Name = '{} \t\t\t'.format(avatar['name'])
                         elif True in [i.endswith(mini_jp2) for i in avatar['name']] and not 'ー' in avatar['name']:
-                            Name = '{} \t'.format(avatar['name'])
+                            Name = '{} \t\t'.format(avatar['name'])
                         elif True in [i.endswith(mini_jp1) for i in avatar['name']] and not 'ー' in avatar['name']:
-                            Name = '{} \t'.format(avatar['name'])
+                            Name = '{} \t\t'.format(avatar['name'])
                         elif True in [i.endswith(mini_jp2) for i in avatar['name']]:
-                            Name = '{} \t\t'.format(avatar['name'])
+                            Name = '{} \t\t\t'.format(avatar['name'])
                         elif True in [s.endswith(mini_jp1) for s in avatar['name']]:
-                            Name = '{} \t\t'.format(avatar['name'])
+                            Name = '{} \t\t\t'.format(avatar['name'])
                         else:
-                            Name = '{} \t'.format(avatar['name'])
+                            Name = '{} \t\t'.format(avatar['name'])
                     elif len(avatar['name']) == 1:
-                        Name = '{} \t\t\t'.format(avatar['name'])
+                        Name = '{} \t\t\t\t'.format(avatar['name'])
                     else:
-                        Name = '{} \t\t'.format(avatar['name'])
+                        Name = '{} \t\t\t'.format(avatar['name'])
                     text = QStandardItem('{}Lv{}'.format(Name, avatar['level']))
                     self.ArtifacterModel.appendRow(text)
                     concurrent.futures.ThreadPoolExecutor().submit(text.setData, concurrent.futures.ThreadPoolExecutor().submit(QIcon, QPixmap(ImageQt.ImageQt(concurrent.futures.ThreadPoolExecutor().submit(Image.open, BytesIO(urllib.request.urlopen(urllib.request.Request('https://enka.network/ui/{}'.format('{}.png'.format(StoreCharacter['{}'.format(avatar['avatarId'])]['SideIconName'].replace('UI_AvatarIcon_Side_', 'UI_AvatarIcon_'))), headers={'User-Agent': UsrAgn})).read())).result())).scaled(128, 128, Qt.KeepAspectRatio, Qt.SmoothTransformation)).result(), Qt.DecorationRole)
