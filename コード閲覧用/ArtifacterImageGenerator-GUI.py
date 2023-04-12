@@ -10344,7 +10344,7 @@ class Ui_ArtifacterImageGenerator(object):
         self.VersionLabel.setFont(font6)
         self.VersionLabel.setStyleSheet(u"QLabel{background: #1a1a1a;}")
         self.VersionLabel.setAlignment(Qt.AlignCenter)
-        self.VersionLabel.setText('v1.3.8')
+        self.VersionLabel.setText('v1.3.9')
         self.SelectImage = QPushButton(ArtifacterImageGenerator)
         self.SelectImage.setObjectName(u"SelectImage")
         self.SelectImage.setGeometry(QRect(805, 645, 51, 51))
@@ -10573,7 +10573,7 @@ class Ui_ArtifacterImageGenerator(object):
         QDesktopServices.openUrl('file:///{}'.format(self.SavePath.text()))
 
     def AutoPickUID(self):
-        gamedir = re.findall("(.+GenshinImpact_Data|YuanShen_Data)", open(os.path.join(os.getenv('USERPROFILE'), 'AppData', 'LocalLow', 'miHoYo', 'Genshin Impact', 'output_log.txt'), 'r').read())[0].split('Warmup file ')[-1].replace('/', os.sep) # Logファイルから場所を特定
+        gamedir = [f for f in re.findall("(.+GenshinImpact_Data|YuanShen_Data)", open(os.path.join(os.getenv('USERPROFILE'), 'AppData', 'LocalLow', 'miHoYo', 'Genshin Impact', 'output_log.txt'), 'r').read()) if 'GenshinImpact_Data' in f][-1].split('Warmup file ')[-1].replace('/', os.sep) # Logファイルから場所を特定
         tmpdir = tempfile.mkdtemp() # 一時フォルダを作成
         subprocess.run("powershell -c Copy-Item '{}' -Destination '{}'".format(os.path.join(gamedir, 'webCaches', 'Cache', 'Cache_Data', 'data_2'), os.path.join(tmpdir, 'cache.txt')), shell=True) # powershellで強引にキャッシュファイルを引っこ抜く
         uid = re.search('[0-9]{9}', list(set(re.findall('("uid":"[0-9]{9}")', str(open(os.path.join(tmpdir, 'cache.txt'), 'rb').read()))))[0])[0] # 一時フォルダで引っこ抜いたキャッシュデータからUIDを特定
