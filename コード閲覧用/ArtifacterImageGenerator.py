@@ -10157,7 +10157,7 @@ def BuildCardCreater(data):
         CharacterImage = Image.open(BytesIO(urllib.request.urlopen(urllib.request.Request('https://enka.network/ui/{}'.format(CharacterIconFileName), headers={'User-Agent': UsrAgn})).read())).convert('RGBA')
     else:
         CharacterImage = Image.open(BytesIO(urllib.request.urlopen(urllib.request.Request('https://enka.network/ui/{}'.format(CharacterIconFileName), headers={'User-Agent': UsrAgn})).read())).convert('RGBA')
-    CharacterImage = CharacterImage.crop((550, 150, 1250, 950))
+    CharacterImage = CharacterImage.crop((585, 120, 1350, 970))
     CharacterImage = CharacterImage.resize((925, 620))
     CharacterAvatarMask = CharacterImage.copy()
     CharacterPaste = Image.new('RGBA', Base.size, (255, 255, 255, 0))
