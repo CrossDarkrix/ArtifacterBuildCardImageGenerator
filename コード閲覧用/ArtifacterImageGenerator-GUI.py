@@ -8055,7 +8055,7 @@ class Ui_ArtifacterImageGenerator(object):
         self.VersionLabel.setFont(font6)
         self.VersionLabel.setStyleSheet(u"QLabel{background: #1a1a1a;}")
         self.VersionLabel.setAlignment(Qt.AlignCenter)
-        self.VersionLabel.setText('v1.4.1')
+        self.VersionLabel.setText('v1.4.2')
         self.SelectImage = QPushButton(ArtifacterImageGenerator)
         self.SelectImage.setObjectName(u"SelectImage")
         self.SelectImage.setGeometry(QRect(805, 645, 51, 51))
@@ -8413,7 +8413,7 @@ class Ui_ArtifacterImageGenerator(object):
         self._print('キャラクターイメージをトリミング中...')
         self.ArtifacterprogressBar.setValue(min(((self.ArtifacterprogressBar.value() + 3.125) / 100) * 100.0, 100.0))
         if self.SetImage == '':
-            CharacterImage = CharacterImage.crop((585, 120, 1350, 970))
+            CharacterImage = CharacterImage.crop((585, 165, 1350, 650))
         self._print('キャラクターイメージをリサイズ中...')
         self.ArtifacterprogressBar.setValue(min(((self.ArtifacterprogressBar.value() + 3.125) / 100) * 100.0, 100.0))
         if self.SetImage == '':
