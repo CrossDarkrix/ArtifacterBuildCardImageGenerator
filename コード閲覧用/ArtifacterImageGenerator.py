@@ -7967,7 +7967,7 @@ def BuildCardCreater(data):
     wlebellen = D.textlength(f'Lv.{WeaponLevel}', font=config_font(24))
     D.rounded_rectangle((1582, 80, 1582 + wlebellen + 4, 108), radius=0, outline=None, width=0)
     D.text((1390, 82), f'Lv.{WeaponLevel}', font=config_font(24))
-    BaseAtk = Image.open(BytesIO(Artifactemotes('基礎攻撃力'))).resize((23, 23))
+    BaseAtk = Image.open(BytesIO(Artifactemotes('基礎攻撃力'))).convert('RGBA').resize((23, 23))
     BaseAtkmask = BaseAtk.copy()
     Base.paste(BaseAtk, (1395, 120), mask=BaseAtkmask)
     D.text((1420, 118), '基礎攻撃力  {}'.format(WeaponBaseATK), font=config_font(23))
@@ -7978,7 +7978,7 @@ def BuildCardCreater(data):
         "HPパーセンテージ": "HP%",
     }
     if WeaponSubOPKey != None:
-        BaseAtk = Image.open(BytesIO(Artifactemotes(WeaponSubOPKey))).resize((23, 23))
+        BaseAtk = Image.open(BytesIO(Artifactemotes(WeaponSubOPKey))).convert('RGBA').resize((23, 23))
         BaseAtkmask = BaseAtk.copy()
         Base.paste(BaseAtk, (1395, 155), mask=BaseAtkmask)
         D.text((1420, 153), f'{optionmap.get(WeaponSubOPKey) or WeaponSubOPKey}  {str(WeaponSubOPValue)+"%" if WeaponSubOPKey in disper else format(WeaponSubOPValue,",")}', font=config_font(23))
@@ -7996,7 +7996,7 @@ def BuildCardCreater(data):
         ScoreEv = Image.open(BytesIO(ArtifactGrades('A')))
     else:
         ScoreEv = Image.open(BytesIO(ArtifactGrades('B')))
-    ScoreEv = ScoreEv.resize((ScoreEv.width // 8, ScoreEv.height // 8))
+    ScoreEv = ScoreEv.convert('RGBA').resize((ScoreEv.width // 8, ScoreEv.height // 8))
     EvMask = ScoreEv.copy()
     Base.paste(ScoreEv, (850, 708), mask=EvMask)
     ArtifactsIconList = [ArtifactsFlowerIconFileName, ArtifactsWingIconFileName, ArtifactsClockIconFileName, ArtifactsCupIconFileName, ArtifactsCrownIconFileName]
@@ -8007,7 +8007,7 @@ def BuildCardCreater(data):
             continue
         atftype.append(details['type'])
         PreviewPaste = Image.new('RGBA', Base.size, (255, 255, 255, 0))
-        Preview = Image.open(BytesIO(urllib.request.urlopen(urllib.request.Request('https://enka.network/ui/{}'.format(ArtifactsIconList[i]), headers={'User-Agent': UsrAgn})).read())).resize((256, 256))
+        Preview = Image.open(BytesIO(urllib.request.urlopen(urllib.request.Request('https://enka.network/ui/{}'.format(ArtifactsIconList[i]), headers={'User-Agent': UsrAgn})).read())).convert('RGBA').resize((256, 256))
         enhancer = ImageEnhance.Brightness(Preview)
         Preview = enhancer.enhance(0.6)
         Pmask1 = Preview.copy()
@@ -8057,7 +8057,7 @@ def BuildCardCreater(data):
                 D.text((79 + 373 * i, 1109 + 50 * a), optionmap.get(SubOP) or SubOP, font=config_font(25), fill=(255,255,255,190))
             else:
                 D.text((79 + 373 * i, 1109 + 50 * a), optionmap.get(SubOP) or SubOP, font=config_font(25))
-            SubIcon = Image.open(BytesIO(Artifactemotes(SubOP))).resize((30, 30))
+            SubIcon = Image.open(BytesIO(Artifactemotes(SubOP))).convert('RGBA').resize((30, 30))
             SubMask = SubIcon.copy()
             Base.paste(SubIcon, (44 + 373 * i, 1109 + 50 * a), mask=SubMask)
             if SubOP in disper:
@@ -8118,7 +8118,7 @@ def BuildCardCreater(data):
         else:
             ScoreImage = Image.open(BytesIO(ArtifactGrades('B')))
 
-        ScoreImage = ScoreImage.resize((ScoreImage.width // 11, ScoreImage.height // 11))
+        ScoreImage = ScoreImage.convert('RGBA').resize((ScoreImage.width // 11, ScoreImage.height // 11))
         SCMask = ScoreImage.copy()
         Base.paste(ScoreImage, (75 + 373 * i, 1352), mask=SCMask)
     SetBounus = Counter([x for x in atftype if atftype.count(x) >= 2])

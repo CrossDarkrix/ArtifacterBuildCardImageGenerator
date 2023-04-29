@@ -8055,7 +8055,7 @@ class Ui_ArtifacterImageGenerator(object):
         self.VersionLabel.setFont(font6)
         self.VersionLabel.setStyleSheet(u"QLabel{background: #1a1a1a;}")
         self.VersionLabel.setAlignment(Qt.AlignCenter)
-        self.VersionLabel.setText('v1.4.2')
+        self.VersionLabel.setText('v1.4.1')
         self.SelectImage = QPushButton(ArtifacterImageGenerator)
         self.SelectImage.setObjectName(u"SelectImage")
         self.SelectImage.setGeometry(QRect(805, 645, 51, 51))
@@ -8413,7 +8413,7 @@ class Ui_ArtifacterImageGenerator(object):
         self._print('キャラクターイメージをトリミング中...')
         self.ArtifacterprogressBar.setValue(min(((self.ArtifacterprogressBar.value() + 3.125) / 100) * 100.0, 100.0))
         if self.SetImage == '':
-            CharacterImage = CharacterImage.crop((585, 165, 1350, 650))
+            CharacterImage = CharacterImage.crop((585, 120, 1350, 970))
         self._print('キャラクターイメージをリサイズ中...')
         self.ArtifacterprogressBar.setValue(min(((self.ArtifacterprogressBar.value() + 3.125) / 100) * 100.0, 100.0))
         if self.SetImage == '':
@@ -8573,7 +8573,7 @@ class Ui_ArtifacterImageGenerator(object):
         wlebellen = D.textlength(f'Lv.{WeaponLevel}', font=config_font(24))
         D.rounded_rectangle((1582, 80, 1582 + wlebellen + 4, 108), radius=0, outline=None, width=0)
         D.text((1390, 82), f'Lv.{WeaponLevel}', font=config_font(24))
-        BaseAtk = Image.open(BytesIO(Artifactemotes('基礎攻撃力'))).resize((23, 23))
+        BaseAtk = Image.open(BytesIO(Artifactemotes('基礎攻撃力'))).convert('RGBA').resize((23, 23))
         BaseAtkmask = BaseAtk.copy()
         Base.paste(BaseAtk, (1395, 120), mask=BaseAtkmask)
         D.text((1420, 118), '基礎攻撃力  {}'.format(WeaponBaseATK), font=config_font(23))
@@ -8584,7 +8584,7 @@ class Ui_ArtifacterImageGenerator(object):
             "HPパーセンテージ": "HP%",
         }
         if WeaponSubOPKey != None:
-            BaseAtk = Image.open(BytesIO(Artifactemotes(WeaponSubOPKey))).resize((23, 23))
+            BaseAtk = Image.open(BytesIO(Artifactemotes(WeaponSubOPKey))).convert('RGBA').resize((23, 23))
             BaseAtkmask = BaseAtk.copy()
             Base.paste(BaseAtk, (1395, 155), mask=BaseAtkmask)
             D.text((1420, 153), f'{optionmap.get(WeaponSubOPKey) or WeaponSubOPKey}  {str(WeaponSubOPValue)+"%" if WeaponSubOPKey in disper else format(WeaponSubOPValue,",")}', font=config_font(23))
@@ -8604,7 +8604,7 @@ class Ui_ArtifacterImageGenerator(object):
             ScoreEv = Image.open(BytesIO(ArtifactGrades('A')))
         else:
             ScoreEv = Image.open(BytesIO(ArtifactGrades('B')))
-        ScoreEv = ScoreEv.resize((ScoreEv.width // 8, ScoreEv.height // 8))
+        ScoreEv = ScoreEv.convert('RGBA').resize((ScoreEv.width // 8, ScoreEv.height // 8))
         EvMask = ScoreEv.copy()
         Base.paste(ScoreEv, (850, 708), mask=EvMask)
         ArtifactsIconList = [ArtifactsFlowerIconFileName, ArtifactsWingIconFileName, ArtifactsClockIconFileName, ArtifactsCupIconFileName, ArtifactsCrownIconFileName]
@@ -8624,7 +8624,7 @@ class Ui_ArtifacterImageGenerator(object):
                 continue
             atftype.append(details['type'])
             PreviewPaste = Image.new('RGBA', Base.size, (255, 255, 255, 0))
-            Preview = concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(Image.open, BytesIO(urllib.request.urlopen(urllib.request.Request('https://enka.network/ui/{}'.format(ArtifactsIconList[i]), headers={'User-Agent': UsrAgn})).read())).result().resize((256, 256))
+            Preview = concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(Image.open, BytesIO(urllib.request.urlopen(urllib.request.Request('https://enka.network/ui/{}'.format(ArtifactsIconList[i]), headers={'User-Agent': UsrAgn})).read())).result().convert('RGBA').resize((256, 256))
             enhancer = concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(ImageEnhance.Brightness, Preview).result()
             Preview = enhancer.enhance(0.6)
             Pmask1 = Preview.copy()
@@ -8674,7 +8674,7 @@ class Ui_ArtifacterImageGenerator(object):
                     concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(D.text, (79 + 373 * i, 1109 + 50 * a), optionmap.get(SubOP) or SubOP, font=config_font(25), fill=(255, 255, 255, 190))
                 else:
                     concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(D.text, (79 + 373 * i, 1109 + 50 * a), optionmap.get(SubOP) or SubOP, font=config_font(25))
-                SubIcon = concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(Image.open, BytesIO(Artifactemotes(SubOP))).result().resize((30, 30))
+                SubIcon = concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(Image.open, BytesIO(Artifactemotes(SubOP))).result().convert('RGBA').resize((30, 30))
                 SubMask = SubIcon.copy()
                 concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(Base.paste, SubIcon, (44 + 373 * i, 1109 + 50 * a), mask=SubMask)
                 if SubOP in disper:
@@ -8736,7 +8736,7 @@ class Ui_ArtifacterImageGenerator(object):
                 ScoreImage = concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(Image.open, BytesIO(ArtifactGrades('A'))).result()
             else:
                 ScoreImage = concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(Image.open, BytesIO(ArtifactGrades('B'))).result()
-            ScoreImage = concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(ScoreImage.resize, (ScoreImage.width // 11, ScoreImage.height // 11)).result()
+            ScoreImage = concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(ScoreImage.convert('RGBA').resize, (ScoreImage.width // 11, ScoreImage.height // 11)).result()
             SCMask = ScoreImage.copy()
             concurrent.futures.ThreadPoolExecutor(os.cpu_count()*99999).submit(Base.paste, ScoreImage, (75 + 373 * i, 1352), mask=SCMask)
         self._print('ベース画像へ聖遺物のスコアイメージを合成中...')
