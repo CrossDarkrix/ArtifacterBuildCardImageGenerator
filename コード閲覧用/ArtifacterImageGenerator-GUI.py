@@ -17,7 +17,7 @@ from decimal import Decimal, ROUND_HALF_UP, ROUND_DOWN
 from ImageBytes import ArtifactGrades, Artifactemotes, ArtifactBaseImages, ArtifactAssets, ArtifactConstellation, ArtifactRarelity
 from io import BytesIO
 from PIL import Image, ImageFont, ImageDraw, ImageEnhance, ImageFile, ImageQt
-ssl.create_default_https_context = ssl._create_unverified_context
+ssl._create_default_https_context = ssl._create_unverified_context
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 from PySide6.QtCore import (QByteArray, QMetaObject, QRect,
                             QSize, Qt)

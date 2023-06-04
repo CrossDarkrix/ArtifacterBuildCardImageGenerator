@@ -4,6 +4,7 @@ import itertools
 import json
 import os
 import sys
+import ssl
 import urllib.request
 from collections import Counter
 from decimal import Decimal, ROUND_HALF_UP, ROUND_DOWN
@@ -11,7 +12,7 @@ from ImageBytes import ArtifactGrades, Artifactemotes, ArtifactBaseImages, Artif
 from io import BytesIO
 from PIL import Image, ImageFont, ImageDraw, ImageEnhance
 from PIL import ImageFile
-
+ssl._create_default_https_context = ssl._create_unverified_context
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 UsrAgn = 'Mozilla/5.0 (Linux; U; Android 8.0; en-la; Nexus Build/JPG991) AppleWebKit/511.2 (KHTML, like Gecko) Version/5.0 Mobile/11S444 YJApp-ANDROID jp.co.yahoo.android.yjtop/4.01.1.5'
 
