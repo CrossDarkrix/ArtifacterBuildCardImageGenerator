@@ -990,22 +990,26 @@ class Artifacter(object):
     def decimal_float(self, obj):
         if isinstance(obj, Decimal):
             return float(obj)
-    
+
     def create_buildcard(self, avaterinfo, score_state):
         # ここからキャラクターデータ
+        if len('{}'.format(avaterinfo['skillDepotId'])) == 3:
+            character_id = '{}-{}'.format(avaterinfo['avatarId'], avaterinfo['skillDepotId'])
+        else:
+            character_id = '{}'.format(avaterinfo['avatarId'])
         element_locale = {'Fire': '炎', 'Water': '水', 'Electric': '雷', 'Ice': '氷', 'Wind': '風', 'Rock': '岩', 'Grass': '草'}
-        character_element = element_locale[self.characters_json['{}'.format(avaterinfo['avatarId'])]['Element']]  # 元素
-        character_name = self.locale_jp['{}'.format(self.characters_json['{}'.format(avaterinfo['avatarId'])]['NameTextMapHash'])]  # キャラクター名
+        character_element = element_locale[self.characters_json[character_id]['Element']]  # 元素
+        character_name = self.locale_jp['{}'.format(self.characters_json[character_id]['NameTextMapHash'])]  # キャラクター名
         try:
-            character_icon = '{}.png'.format('{}'.format(self.costumes['{}'.format(avaterinfo['costumeId'])]['sideIconName']).replace('UI_AvatarIcon_Side_', 'UI_Costume_'))  # キャラクターがコスチュームを付けていた場合の対応
+            character_icon = '{}.png'.format(self.characters_json[character_id]['Costumes']['{}'.format(avaterinfo['costumeId'])]['sideIconName'].replace('UI_AvatarIcon_Side_', 'UI_Costume_'))  # キャラクターがコスチュームを付けていた場合の対応
         except:
-            character_icon = '{}.png'.format('{}'.format(self.characters_json['{}'.format(avaterinfo['avatarId'])]['SideIconName']).replace('UI_AvatarIcon_Side_', 'UI_Gacha_AvatarImg_'))  # キャラクターの画像
-        character_skill_icons = ['{}.png'.format(skill) for skill in self.characters_json['{}'.format(avaterinfo['avatarId'])]['Skills'].values()]  # キャラクター天賦画像
+            character_icon = '{}.png'.format('{}'.format(self.characters_json[character_id]['SideIconName']).replace('UI_AvatarIcon_Side_', 'UI_Gacha_AvatarImg_'))  # キャラクターの画像
+        character_skill_icons = ['{}.png'.format(skill) for skill in self.characters_json[character_id]['Skills'].values()]  # キャラクター天賦画像
         try:
             character_const = len(avaterinfo['talentIdList']) - 1  # キャラクター凸数
         except:
             character_const = -1
-        character_const_icons = ['{}.png'.format(cicon) for cicon in self.characters_json[str(avaterinfo['avatarId'])]['Consts']]  # キャラクター凸画像
+        character_const_icons = ['{}.png'.format(cicon) for cicon in self.characters_json[character_id]['Consts']]  # キャラクター凸画像
         character_level = '{}'.format(avaterinfo['propMap']['4001']['val'])  # キャラクターのレベル
         character_fav_rate = '{}'.format(avaterinfo['fetterInfo']['expLevel'])  # キャラクターの好感度
         character_hp = int(Decimal(avaterinfo['fightPropMap']['2000']).quantize(Decimal('0'), rounding=ROUND_HALF_UP))  # キャラクターのHP
@@ -1027,7 +1031,7 @@ class Artifacter(object):
         character_element_buff_value = '{}'.format(Decimal(avaterinfo['fightPropMap'][character_element_max_buff_key] * 100).quantize(Decimal('0.1'), rounding=ROUND_HALF_UP))
         if 'proudSkillExtraLevelMap' in avaterinfo:
             try:
-                PMap = self.characters_json['{}'.format(avaterinfo['avatarId'])]['ProudMap']
+                PMap = self.characters_json['{}'.format(character_id)]['ProudMap']
                 for sk in list(map(int, avaterinfo['skillLevelMap'].keys())):
                     try:
                         if PMap['{}'.format(sk)] in list(map(int, avaterinfo['proudSkillExtraLevelMap'].keys())):
@@ -1036,9 +1040,9 @@ class Artifacter(object):
                         pass
             except:
                 pass
-        character_talent_normal = '{}'.format(avaterinfo['skillLevelMap']['{}'.format(self.characters_json['{}'.format(avaterinfo['avatarId'])]['SkillOrder'][0])])  # キャラクター天賦: 通常攻撃
-        character_talent_skill = '{}'.format(avaterinfo['skillLevelMap']['{}'.format(self.characters_json['{}'.format(avaterinfo['avatarId'])]['SkillOrder'][1])])  # キャラクター天賦: スキル攻撃
-        character_talent_explosion = '{}'.format(avaterinfo['skillLevelMap']['{}'.format(self.characters_json['{}'.format(avaterinfo['avatarId'])]['SkillOrder'][2])])  # キャラクター天賦: 爆発攻撃
+        character_talent_normal = '{}'.format(avaterinfo['skillLevelMap']['{}'.format(self.characters_json['{}'.format(character_id)]['SkillOrder'][0])])  # キャラクター天賦: 通常攻撃
+        character_talent_skill = '{}'.format(avaterinfo['skillLevelMap']['{}'.format(self.characters_json['{}'.format(character_id)]['SkillOrder'][1])])  # キャラクター天賦: スキル攻撃
+        character_talent_explosion = '{}'.format(avaterinfo['skillLevelMap']['{}'.format(self.characters_json['{}'.format(character_id)]['SkillOrder'][2])])  # キャラクター天賦: 爆発攻撃
         character_base_hp = int(Decimal(avaterinfo['fightPropMap']['1']).quantize(Decimal('0'), rounding=ROUND_HALF_UP))  # キャラクター基礎HP
         character_base_attack = int(Decimal(avaterinfo['fightPropMap']['4']).quantize(Decimal('0'), rounding=ROUND_HALF_UP))  # キャラクター基礎攻撃力
         character_base_defence = int(Decimal(avaterinfo['fightPropMap']['7']).quantize(Decimal('0'), rounding=ROUND_HALF_UP))  # キャラクター基礎防御力
@@ -1108,8 +1112,21 @@ class Artifacter(object):
             artifact_font = lambda size: ImageFont.truetype(Font, size)
             BaseImage = Image.open(BytesIO(self.artifact_base_image(character_element))).convert('RGBA')  # ベース画像の読み込み
             # キャラクター画像の編集
-            character_image = Image.open(BytesIO(urllib.request.urlopen(urllib.request.Request('https://enka.network/ui/{}'.format(character_icon), headers={'User-Agent': UsrAgn})).read())).convert('RGBA')  # キャラクター画像をEnkaNetworkから取得
-            character_image = character_image.crop((585, 165, 1350, 650))  # キャラクターの画像を切り抜き
+            if character_icon == 'UI_Gacha_AvatarImg_PlayerBoy.png':
+                character_image = Image.open(BytesIO(urllib.request.urlopen(urllib.request.Request('https://raw.githubusercontent.com/Rollphes/ArtifacterImageGen/master/lib/enkaManager/ui/UI_Gacha_AvatarImg_PlayerBoy.png', headers={'User-Agent': UsrAgn})).read())).convert('RGBA')
+            else:
+                character_image = Image.open(BytesIO(urllib.request.urlopen(urllib.request.Request('https://enka.network/ui/{}'.format(character_icon), headers={'User-Agent': UsrAgn})).read())).convert('RGBA')  # キャラクター画像をEnkaNetworkから取得
+            if character_icon == 'UI_Gacha_AvatarImg_PlayerGirl.png':
+                character_image = Image.open(BytesIO(urllib.request.urlopen(urllib.request.Request('https://raw.githubusercontent.com/Rollphes/ArtifacterImageGen/master/lib/enkaManager/ui/UI_Gacha_AvatarImg_PlayerGirl.png', headers={'User-Agent': UsrAgn})).read())).convert('RGBA')
+            else:
+                character_image = Image.open(BytesIO(urllib.request.urlopen(urllib.request.Request('https://enka.network/ui/{}'.format(character_icon), headers={'User-Agent': UsrAgn})).read())).convert('RGBA')  # キャラクター画像をEnkaNetworkから取得
+            if character_icon == 'UI_Gacha_AvatarImg_PlayerBoy.png' or character_icon == 'UI_Gacha_AvatarImg_PlayerGirl.png':
+                if character_icon == 'UI_Gacha_AvatarImg_PlayerGirl.png':
+                    character_image = character_image.crop((555, 150, 1350, 650))  # キャラクターの画像を切り抜き
+                else:
+                    character_image = character_image.crop((0, 80, 1350, 650))  # キャラクターの画像を切り抜き
+            else:
+                character_image = character_image.crop((585, 165, 1350, 650))  # キャラクターの画像を切り抜き
             character_image = character_image.resize((925, 620))  # キャラクターの画像をリサイズ
             character_avatar_image_mask = character_image.copy()
             character_paste = Image.new('RGBA', BaseImage.size, (255, 255, 255, 0))  # キャラクター画像を編集するための土台作り
