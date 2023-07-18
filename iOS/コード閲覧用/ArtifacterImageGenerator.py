@@ -995,8 +995,10 @@ class Artifacter(object):
         # ここからキャラクターデータ
         if len('{}'.format(avaterinfo['skillDepotId'])) == 3:
             character_id = '{}-{}'.format(avaterinfo['avatarId'], avaterinfo['skillDepotId'])
+            character_skill_icons = ['{}.png'.format(list(self.characters_json[character_id]['Skills'].values())[2]), '{}.png'.format(list(self.characters_json[character_id]['Skills'].values())[0]), '{}.png'.format(list(self.characters_json[character_id]['Skills'].values())[1])]  # キャラクター天賦画像
         else:
             character_id = '{}'.format(avaterinfo['avatarId'])
+            character_skill_icons = ['{}.png'.format(skill) for skill in self.characters_json[character_id]['Skills'].values()]  # キャラクター天賦画像
         element_locale = {'Fire': '炎', 'Water': '水', 'Electric': '雷', 'Ice': '氷', 'Wind': '風', 'Rock': '岩', 'Grass': '草'}
         character_element = element_locale[self.characters_json[character_id]['Element']]  # 元素
         character_name = self.locale_jp['{}'.format(self.characters_json[character_id]['NameTextMapHash'])]  # キャラクター名
@@ -1004,7 +1006,6 @@ class Artifacter(object):
             character_icon = '{}.png'.format(self.characters_json[character_id]['Costumes']['{}'.format(avaterinfo['costumeId'])]['sideIconName'].replace('UI_AvatarIcon_Side_', 'UI_Costume_'))  # キャラクターがコスチュームを付けていた場合の対応
         except:
             character_icon = '{}.png'.format('{}'.format(self.characters_json[character_id]['SideIconName']).replace('UI_AvatarIcon_Side_', 'UI_Gacha_AvatarImg_'))  # キャラクターの画像
-        character_skill_icons = ['{}.png'.format(skill) for skill in self.characters_json[character_id]['Skills'].values()]  # キャラクター天賦画像
         try:
             character_const = len(avaterinfo['talentIdList']) - 1  # キャラクター凸数
         except:
@@ -1113,11 +1114,9 @@ class Artifacter(object):
             BaseImage = Image.open(BytesIO(self.artifact_base_image(character_element))).convert('RGBA')  # ベース画像の読み込み
             # キャラクター画像の編集
             if character_icon == 'UI_Gacha_AvatarImg_PlayerBoy.png':
-                character_image = Image.open(BytesIO(urllib.request.urlopen(urllib.request.Request('https://raw.githubusercontent.com/Rollphes/ArtifacterImageGen/master/lib/enkaManager/ui/UI_Gacha_AvatarImg_PlayerBoy.png', headers={'User-Agent': UsrAgn})).read())).convert('RGBA')
-            else:
-                character_image = Image.open(BytesIO(urllib.request.urlopen(urllib.request.Request('https://enka.network/ui/{}'.format(character_icon), headers={'User-Agent': UsrAgn})).read())).convert('RGBA')  # キャラクター画像をEnkaNetworkから取得
-            if character_icon == 'UI_Gacha_AvatarImg_PlayerGirl.png':
-                character_image = Image.open(BytesIO(urllib.request.urlopen(urllib.request.Request('https://raw.githubusercontent.com/Rollphes/ArtifacterImageGen/master/lib/enkaManager/ui/UI_Gacha_AvatarImg_PlayerGirl.png', headers={'User-Agent': UsrAgn})).read())).convert('RGBA')
+                character_image = Image.open(BytesIO(self.artifact_assets(character_icon))).convert('RGBA')
+            elif character_icon == 'UI_Gacha_AvatarImg_PlayerGirl.png':
+                character_image = Image.open(BytesIO(self.artifact_assets(character_icon))).convert('RGBA')
             else:
                 character_image = Image.open(BytesIO(urllib.request.urlopen(urllib.request.Request('https://enka.network/ui/{}'.format(character_icon), headers={'User-Agent': UsrAgn})).read())).convert('RGBA')  # キャラクター画像をEnkaNetworkから取得
             if character_icon == 'UI_Gacha_AvatarImg_PlayerBoy.png' or character_icon == 'UI_Gacha_AvatarImg_PlayerGirl.png':
@@ -1190,9 +1189,9 @@ class Artifacter(object):
             character_friendShipicon_mask = character_friendShipicon.copy()  # 好感度アイコンのマスクを作成
             BaseImage.paste(character_friendShipicon, (74 + int(character_levellength), 108), mask=character_friendShipicon_mask)  # ベース画像に好感度アイコンを貼り付け
             DR.text((103 + character_levellength, 106), character_fav_rate, font=artifact_font(25))  # 好感度を書き込み
-            DR.text((1033, 86), 'Lv.{}'.format(character_talent_normal), font=artifact_font(17), fill='aqua' if character_talent_normal >= '10' else None)  # 通常天賦の書き込み
-            DR.text((1033, 176), 'Lv.{}'.format(character_talent_skill), font=artifact_font(17), fill='aqua' if character_talent_skill >= '10' else None)  # スキル天賦の書き込み
-            DR.text((1033, 264), 'Lv.{}'.format(character_talent_explosion), font=artifact_font(17), fill='aqua' if character_talent_explosion >= '10' else None)  # 元素爆発天賦の書き込み
+            DR.text((1033, 86), 'Lv.{}'.format(character_talent_normal), font=artifact_font(17), fill='aqua' if int(character_talent_normal) >= 10 else None)  # 通常天賦の書き込み
+            DR.text((1033, 176), 'Lv.{}'.format(character_talent_skill), font=artifact_font(17), fill='aqua' if int(character_talent_skill) >= 10 else None)  # スキル天賦の書き込み
+            DR.text((1033, 264), 'Lv.{}'.format(character_talent_explosion), font=artifact_font(17), fill='aqua' if int(character_talent_explosion) >= 10 else None)  # 元素爆発天賦の書き込み
             character_status_json = {'HP': character_hp, '攻撃力': character_attack_rate, '防御力': character_defence_rate, '元素熟知': character_element_mastery, '会心率': character_critical_rate, '会心ダメージ': character_critical_damage_rate, '元素チャージ効率': character_charge_efficiency, character_element_buff_name: character_element_buff_value}  # キャラクターのステータスをまとめたもの
             character_status_base_json = {'HP': character_base_hp, '攻撃力': character_base_attack, '防御力': character_base_defence}  # キャラクターの基礎ステータスをまとめたもの
             
