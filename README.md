@@ -31,8 +31,8 @@
 <li><a href="https://twitter.com/kaz_m_gaming">カズ様(@kaz_m_gaming)</a></li><br />
 <li><a href="https://github.com/CrossDarkrix">CrossDarkrix</a></li>
 </ul>
-<h2>デザインのベースを作ってくれた方</h2>
+<h2>デザインのベースなどを作ってくれた方</h2>
 <ul>
+<li><a href="https://github.com/pome-ta">pome-ta様(iOS版)</a></li>
 <li><a href="https://twitter.com/Tsukishiro_527">Yuki'ch様(@Tsukishiro_527)</a></li>
 </ul>
-
