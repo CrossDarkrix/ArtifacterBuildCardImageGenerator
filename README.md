@@ -28,7 +28,7 @@
 </ul>
 <h2>コード書き換えした人</h2>
 <ul>
-<li><a href="https://twitter.com/kaz_m_gaming">カズ様(@kaz_m_gaming)</a></li><br />
+<li><a href="https://twitter.com/kaz_m_gaming">カズ様(@kaz_m_gaming)</a></li>
 <li><a href="https://github.com/CrossDarkrix">CrossDarkrix</a></li>
 </ul>
 <h2>デザインのベースなどを作ってくれた方</h2>
