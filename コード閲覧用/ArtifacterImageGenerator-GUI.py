@@ -469,7 +469,6 @@ try:
             def Initialization(self):
                 self.locale_jp = concurrent.futures.ThreadPoolExecutor().submit(self.locale).result()  # データの表記名データをEnka.Network公式Githubから取得
                 self.characters_json = concurrent.futures.ThreadPoolExecutor().submit(self.character_json).result()  # キャラクターデータをEnka.Network公式Githubから取得
-                self.costumes = concurrent.futures.ThreadPoolExecutor().submit(self.costume_json).result()
                 try:
                     self.player_data = json.loads(urllib.request.urlopen(urllib.request.Request('https://enka.network/api/uid/{}'.format(self.UIDs.text()), headers={'User-Agent': UsrAgn})).read().decode(errors='ignore'))
                 except Exception as E:
@@ -1257,20 +1256,6 @@ try:
                     }
                 }
 
-            def difference_costume_json(self):
-                return {
-                    "202901": {
-                        "iconName": "UI_AvatarIcon_KleeCostumeWitch",
-                        "sideIconName": "UI_AvatarIcon_Side_KleeCostumeWitch",
-                        "nameTextMapHash": 2343491290
-                                },
-                    "201501": {
-                        "iconName": "UI_AvatarIcon_KaeyaCostumeDancer",
-                        "sideIconName": "UI_AvatarIcon_Side_KaeyaCostumeDancer",
-                        "nameTextMapHash": 177626138
-                                }
-                        }
-
             def locale(self):
                 LJsn = json.loads(urllib.request.urlopen(urllib.request.Request('https://raw.githubusercontent.com/EnkaNetwork/API-docs/master/store/loc.json', headers={'User-Agent': UsrAgn})).read().decode(errors='ignore'))
                 for percent in [ja for ja in LJsn['ja'] if 'PERCENT' in ja]:
@@ -1285,12 +1270,6 @@ try:
 
             def character_pfps_json(self):
                 return json.loads(urllib.request.urlopen(urllib.request.Request('https://raw.githubusercontent.com/EnkaNetwork/API-docs/master/store/pfps.json', headers={'User-Agent': UsrAgn})).read().decode(errors='ignore'))
-
-            def costume_json(self):
-                CosJsn = json.loads(urllib.request.urlopen(urllib.request.Request('https://raw.githubusercontent.com/EnkaNetwork/API-docs/master/store/costumes.json', headers={'User-Agent': UsrAgn})).read().decode(errors='ignore'))
-                for key, value in self.difference_costume_json().items():
-                    CosJsn[key] = value
-                return CosJsn
 
             def option_calculation(self, data: dict):  # 聖遺物の詳細を計算
                 dup = self.mainoption()  # 聖遺物のメインオプション
