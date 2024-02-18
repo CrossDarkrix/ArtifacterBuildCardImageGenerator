@@ -2,7 +2,7 @@
 
 import os, subprocess, urllib.request
 
-script = "#!python3\n\nimport os\n\nos.system('python3 {}'.format(os.path.join(os.environ.get('HOME'), 'Library', 'bin', 'ArtifacterUI.py')))"
+script = "#!python3\n\nimport os\n\nos.system('python3 {} |'.format(os.path.join(os.environ.get('HOME'), 'Library', 'bin', 'ArtifacterUI.py')))"
 
 if os.path.exists(os.path.join(os.environ.get('HOME'), 'Library', 'bin')):
     with open(os.path.join(os.environ.get('HOME'), 'Library', 'bin', 'artifacter'), 'w', encoding='utf-8') as f:
