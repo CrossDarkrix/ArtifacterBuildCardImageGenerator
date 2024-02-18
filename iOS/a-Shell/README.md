@@ -6,4 +6,4 @@
 
 ## install_artifacter.pyの実行方法
 
-```curl -OL -k https://raw.githubusercontent.com/CrossDarkrix/ArtifacterBuildCardImageGenerator/master/iOS/a-Shell/install_artifacter.py　&& python3 install_artifacter.py```を実行
+```curl -OL -k https://raw.githubusercontent.com/CrossDarkrix/ArtifacterBuildCardImageGenerator/master/iOS/a-Shell/install_artifacter.py && python3 install_artifacter.py```を実行
