@@ -1104,10 +1104,13 @@ class Artifacter(object):
                 else:
                     character_image = character_image.crop((0, 80, 1350, 650))  # キャラクターの画像を切り抜き
             else:
-                if character_image.width <= 2047:
-                    character_image = character_image.crop((5, 125, 1350, 650))  # キャラクターの画像を切り抜き
+                if 'AvatarImg_Nahida' in character_icon:
+                    character_image = character_image.crop((671, 270, 1420, 920))  # キャラクターの画像を切り抜き
                 else:
-                    character_image = character_image.crop((585, 165, 1350, 650))  # キャラクターの画像を切り抜き
+                    if character_image.width <= 2047:
+                        character_image = character_image.crop((5, 90, 1350, 750))  # キャラクターの画像を切り抜き
+                    else:
+                        character_image = character_image.crop((585, 165, 1350, 650))  # キャラクターの画像を切り抜き
             character_image = character_image.resize((925, 620))  # キャラクターの画像をリサイズ
             character_avatar_image_mask = character_image.copy()
             character_paste = Image.new('RGBA', BaseImage.size, (255, 255, 255, 0))  # キャラクター画像を編集するための土台作り
