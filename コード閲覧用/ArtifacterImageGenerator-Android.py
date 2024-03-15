@@ -1568,7 +1568,6 @@ class MainWindow(QMainWindow):
                         DR.text((1340, 828), n, fill=(0, 255, 0), font=artifact_font(23))
                         DR.text((1605, 826), '{}'.format(q), font=artifact_font(30))
                 concurrent.futures.ThreadPoolExecutor(os.cpu_count() * 99999).submit(self.SaveCard, BaseImage)
-                self._print('完了!　出力先は「{}」です。'.format(os.path.join(self.SavePath.text(), self.SaveFile.text())))
                 ClickCount[0] = '0'
                 self.SetImage = ''
                 ImageFileCropped[0] = None
