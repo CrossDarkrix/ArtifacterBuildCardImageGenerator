@@ -53,6 +53,7 @@ try:
         class ArtifacterUI(QWidget):
             def __init__(self, win):
                 super().__init__()
+                self.WINDOW = win
                 self.artifact_grades = ArtifactGrades
                 self.artifact_emotes = Artifactemotes
                 self.artifact_base_image = ArtifactBaseImages
@@ -60,7 +61,6 @@ try:
                 self.artifact_constellation = ArtifactConstellation
                 self.artifact_rarelity = ArtifactRarelity
                 self.ArtifactFont = ArtifactFont
-                self.WINDOW = win
                 font = QFont()
                 font.setFamilies(["Arial"])
                 self.setFont(font)
@@ -1576,7 +1576,13 @@ try:
                             else:
                                 character_image = character_image.crop((0, 80, 1350, 650))  # キャラクターの画像を切り抜き
                         else:
-                            character_image = character_image.crop((585, 165, 1350, 650))  # キャラクターの画像を切り抜き
+                            if 'AvatarImg_Nahida' in character_icon:
+                                character_image = character_image.crop((671, 270, 1420, 920))  # キャラクターの画像を切り抜き
+                            else:
+                                if character_image.width <= 2047:
+                                    character_image = character_image.crop((5, 90, 1350, 750))  # キャラクターの画像を切り抜き
+                                else:
+                                    character_image = character_image.crop((585, 165, 1350, 650))  # キャラクターの画像を切り抜き
                         character_image = character_image.resize((925, 620))  # キャラクターの画像をリサイズ
                     else:
                         if ImageFileCropped[0] != None:
@@ -1642,7 +1648,10 @@ try:
                     character_levellength = DR.textlength('Lv.{}'.format(character_level), font=artifact_font(25))  # キャラクターのレベルの文章の長さを取得
                     character_friendShiplength = DR.textlength(character_fav_rate, font=artifact_font(25))  # キャラクターの好感度の文章の長さを取得
                     DR.text((60, 105), 'Lv.{}'.format(character_level), font=artifact_font(25))  # キャラクターのレベルを書き込み
-                    DR.rounded_rectangle((60 + character_levellength + 5, 74, 77 + character_levellength + character_friendShiplength, 102), radius=0, outline=None, width=0)  # 好感度をレベルの文の長さに間隔を開けてから記入
+                    try:
+                        DR.rounded_rectangle((60 + character_levellength + 5, 74, 77 + character_levellength + character_friendShiplength, 102), radius=0, outline=None, width=0)  # 好感度をレベルの文の長さに間隔を開けてから記入
+                    except:
+                        pass
                     character_friendShipicon = Image.open(BytesIO(self.artifact_assets('Love'))).convert('RGBA')  # キャラクターの好感度アイコンを読み込み
                     character_friendShipicon = character_friendShipicon.resize((int(character_friendShipicon.width * (24 / character_friendShipicon.height)), 24))  # 好感度アイコンをリサイズ
                     character_friendShipicon_mask = character_friendShipicon.copy()  # 好感度アイコンのマスクを作成
@@ -1691,7 +1700,10 @@ try:
                             DR.text((1830 - HPSize - HPBSize, 335 + i * 59), HPBase, font=artifact_font(12), fill=(255, 255, 255, 180))
                     DR.text((1390, 47), weapon_name, font=artifact_font(30))
                     weapon_length = DR.textlength(f'Lv.{weapon_level}', font=artifact_font(24))
-                    DR.rounded_rectangle((1582, 80, 1582 + weapon_length + 4, 108), radius=0, outline=None, width=0)
+                    try:
+                        DR.rounded_rectangle((1582, 80, 1582 + weapon_length + 4, 108), radius=0, outline=None, width=0)
+                    except:
+                        pass
                     DR.text((1390, 82), f'Lv.{weapon_level}', font=artifact_font(24))
                     w_baseAttack = Image.open(BytesIO(self.artifact_emotes('基礎攻撃力'))).convert('RGBA').resize((23, 23))
                     w_baseAttack_mask = w_baseAttack.copy()
@@ -1706,7 +1718,10 @@ try:
                             DR.text((1420, 153), f'{OptionMap.get(weapon_sub_name) or weapon_sub_name}  {str(weapon_sub_value) + "%" if weapon_sub_name in Disper else format(weapon_sub_value, ",")}', font=artifact_font(23))
                         except:
                             DR.text((1420, 153), f'{weapon_sub_name}  {str(weapon_sub_value) + "%" if weapon_sub_name in Disper else format(weapon_sub_value, ",")}', font=artifact_font(23))
-                    DR.rounded_rectangle((1430, 45, 1470, 70), radius=0, outline=None, width=0)
+                    try:
+                        DR.rounded_rectangle((1430, 45, 1470, 70), radius=0, outline=None, width=0)
+                    except:
+                        pass
                     DR.text((1180, 46), f'R{weapon_constellations}', font=artifact_font(24))
                     scorelen = DR.textlength(f'{artifacts_score["total"]}', artifact_font(75))  # 聖遺物スコアの文字数を計算
                     DR.text((440 - scorelen // 2, 723), str(artifacts_score["total"]), font=artifact_font(100))  # 聖遺物スコアを100pixelで表記
@@ -1770,7 +1785,10 @@ try:
                                 MainOptionValueSize = DR.textlength(format(MainOptionValue, ","), artifact_font(49))
                                 DR.text((375 + i * 373 - MainOptionValueSize, 971), format(MainOptionValue, ","), font=artifact_font(49))
                             artifactLevelLen = DR.textlength('+{}'.format(artifact_details['level']), artifact_font(21))  # 聖遺物のレベルの文字の長さを計算
-                            DR.rounded_rectangle((373 + i * 373 - int(artifactLevelLen), 1023, 375 + i * 373, 771), radius=0, outline=None, width=0)
+                            try:
+                                DR.rounded_rectangle((373 + i * 373 - int(artifactLevelLen), 1023, 375 + i * 373, 771), radius=0, outline=None, width=0)
+                            except:
+                                pass
                             DR.text((374 + i * 373 - artifactLevelLen, 1024), '+{}'.format(artifact_details['level']), font=artifact_font(21))  # 聖遺物のレベルを記載
                             if artifact_details['level'] == 20 and artifact_details['rarelity'] == 5:  # 聖遺物のレベルが２０でかつレアリティが５なら以下を実行
                                 art_c_data = {}
@@ -1895,12 +1913,6 @@ try:
 
             def ClearList(self):
                 [[self.ArtifacterModel.removeRow(i) for i in range(self.ArtifacterModel.rowCount())] for _ in range(8)]
-
-                def __enter__(self):
-                    return self.tempPath
-                
-                def __exit__(self, _, __, ___):
-                    os.remove(self.tempPath)
 
     class CropLabel(QLabel):
         def __init__(self, parent=None):
