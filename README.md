@@ -9,7 +9,7 @@
 
 <h2>使い方(How to Use)</h2>
 
-<code>python3 ArtifacterImageGenerator.py</code>
+<code>python3 ArtifacterImageGenerator-GUI.py</code>
 
 <h2>ScreenShot</h2>
 
